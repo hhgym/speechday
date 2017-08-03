@@ -42,6 +42,7 @@ CREATE TABLE `event` (
   `dateFrom` int(11) NOT NULL,
   `dateTo` int(11) NOT NULL,
   `slotTimeMin` int(11) NOT NULL DEFAULT '5',
+  `breakFrequency` int(11) NOT NULL DEFAULT '0',
   `isActive` int(11) NOT NULL DEFAULT '0',
   `finalPostDate` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

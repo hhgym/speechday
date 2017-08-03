@@ -72,10 +72,15 @@ class SlotDAO extends AbstractDAO {
         $slots = array();
         $slotDuration = $event->getSlotTime();
         $startTime = $event->getDateFrom();
+        $breakFrequency = $event->getBreakFrequency();
         $breakCounter = 0;
         while ($startTime < $event->getDateTo()) {
             $endTime = $startTime + ($slotDuration * 60);
-            $type = (($breakCounter % 30 != 0) || ($breakCounter == 0)) ? 1 : 2;
+            // if ($breakFrequency == 0) {
+                $type = 1;
+            // } else {
+                // $type = (($breakCounter % $breakFrequency != 0) || ($breakCounter == 0)) ? 1 : 2;
+            // }
             if ($asDummy) {
                 $slots[] = new Slot(null, null, null, null, $startTime, $endTime, $type, 1);
             } else {

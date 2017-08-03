@@ -84,6 +84,17 @@ include_once 'inc/header.php';
                                 <option>20</option>
                             </select>
                         </div>
+                        
+                        <div class='form-group'>
+                            <label for='inputbreakFrequency'>Zeit zwischen Pausen (keine Pause = 0)</label>
+                            <select class='form-control' id='inputbreakFrequency' name='breakFrequency'>
+                                <option>0</option>
+                                <option>30</option>
+                                <option>60</option>
+                                <option>90</option>
+                                <option>120</option>
+                            </select>
+                        </div>
 
 
                         <div class='form-group'>

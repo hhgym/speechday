@@ -47,6 +47,7 @@ class Controller {
         $beginTime = $_REQUEST['beginTime'];
         $endTime = $_REQUEST['endTime'];
         $slotDuration = $_REQUEST['slotDuration'];
+        $breakFrequency = $_REQUEST['breakFrequency'];
         $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
         $bookingDate = $_REQUEST['bookingDate'];
 
@@ -58,7 +59,7 @@ class Controller {
             return;
         }
 
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $setActive, $finalPostDate);
+        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $breakFrequency, $setActive, $finalPostDate);
         if ($eventId > 0) {
             echo 'success';
         }
