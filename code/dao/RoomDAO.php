@@ -22,6 +22,18 @@ class RoomDAO extends AbstractDAO {
         return $rooms;
     }
 
+    public static function getAllFreeRooms() {
+        $rooms = array();
+        $con = self::getConnection();
+        $res = self::query($con, 'SELECT id, roomNumber, name FROM room WHERE teacherId is NULL', array());
+
+        while ($r = self::fetchObject($res)) {
+            $rooms[$r->teacherId] = new Room($r->id, $r->roomNumber, $r->name);
+        }
+        self::close($res);
+        return $rooms;
+    }
+    
     public static function getRoomForTeacherId($teacherId) {
         $room = null;
         $con = self::getConnection();
