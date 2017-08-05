@@ -46,10 +46,13 @@ function getDateOptions($attendance, $dateFrom = true) {
 
     $time = $activeEvent->getDateFrom();
     $endTime = $activeEvent->getDateTo();
-
+    $slottime = $activeEvent->getSlotTime();
+    $slottime = $slottime * 60;
+    
     $options = '';
+
     while ($time <= $endTime) {
-        $halfHour = 60 * 60 / 2;
+        // $halfHour = 60 * 60 / 2;
         $selected = '';
         if ($dateFrom && $time == $attendance['from']) {
             $selected = ' selected';
@@ -57,7 +60,8 @@ function getDateOptions($attendance, $dateFrom = true) {
             $selected = ' selected';
         }
         $options .= sprintf('<option value="%s"%s>%s</option>', $time, $selected, date('H:i', $time));
-        $time += $halfHour;
+        // $time += $halfHour;
+        $time += $slottime;
     }
 
     return $options;
@@ -90,6 +94,8 @@ function getActionString($actionId) {
             return 'Termin gelöscht';
         case 5:
             return 'Anwesenheit geändert';
+        case 6:
+            return 'Pausen geändert';
         default:
             return 'Unbekannte Aktion';
     }

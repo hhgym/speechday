@@ -25,7 +25,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='collapse1' class='panel-collapse collapse in'>
+            <div id='collapse1' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <form id='chooseMySlotsForm'>
                         <div class='form-group'>
@@ -96,6 +96,21 @@ include_once 'inc/header.php';
                     <div class='message' id='message'></div>
 
                     <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse3'>
+                        Meine Pausen
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse3' class='panel-collapse collapse in'>
+                <div class='panel-body'>
+                    <div id='SlotsTablePauses'></div>
                 </div>
             </div>
         </div>

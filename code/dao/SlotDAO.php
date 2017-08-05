@@ -89,7 +89,6 @@ class SlotDAO extends AbstractDAO {
             $startTime = $endTime;
             $breakCounter += $slotDuration;
         }
-
         return $slots;
     }
 
@@ -133,10 +132,18 @@ class SlotDAO extends AbstractDAO {
     public static function setStudentToSlot($eventId, $slotId, $studentId) {
         $con = self::getConnection();
         $result = self::query($con, 'UPDATE slot SET studentId = ? WHERE id = ? AND eventId = ? AND type = 1 AND available = 1 AND studentId IS NULL;', array($studentId, $slotId, $eventId), true);
+        
+        return $result;
+    }   
+
+    public static function togglePauseToSlot($eventId, $teacherId, $slotId, $slotType) {
+        $slotType = ($slotType == 1 ? 2 : 1);
+        $con = self::getConnection();
+        $result = self::query($con, 'UPDATE slot SET type = ? WHERE id = ? AND eventId = ? AND teacherId = ? AND available = 1 AND studentId IS NULL;', array($slotType, $slotId, $eventId, $teacherId), true);
 
         return $result;
     }
-
+    
     public static function deleteStudentFromSlot($eventId, $slotId) {
         $con = self::getConnection();
         $s = self::query($con, 'UPDATE slot SET studentId = NULL WHERE id = ? AND eventId = ?;', array($slotId, $eventId), true);

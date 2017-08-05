@@ -350,6 +350,27 @@ class Controller {
         }
     }
 
+    protected function action_ToggleSlot() {
+        $slotId = $_REQUEST['slotId'];
+        $slotType = $_REQUEST['slotType'];
+        $teacherId = $_REQUEST['teacherId'];
+        $eventId = $_REQUEST['eventId'];
+
+        $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
+        LogDAO::log($teacherId, LogDAO::LOG_ACTION_PAUSE_SLOT, $info);
+
+        $result = SlotDAO::togglePauseToSlot($eventId, $teacherId, $slotId, $slotType);
+        if ($result['success']) {
+            if ($result['rowCount'] > 0) {
+                echo('success');
+            } else {
+                echo('dirtyRead');
+            }
+        } else {
+            echo('error');
+        }
+    }
+    
     protected function action_deleteSlot() {
         $userId = $_REQUEST['userId'];
         $slotId = $_REQUEST['slotId'];
