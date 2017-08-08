@@ -33,16 +33,18 @@ As a student / parent:
 3. Print your time-table.
 
 ## ToDo
-- Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
-- Global: add slots to added teacher, when event is active
-- Global: add eventId to room db for handle different events
-- Global: deleting slot needs confirmation
-- Global: update bootstrap and the libs
-- Admin: room configuration (add, rename, delete, (un)set to teacher)
-- Admin: unset rooms from all teacher (for new event)
-- Admin: import rooms -> modify action_csvPreview for room import
-- Admin: use datetimepicker for bookingDate
-- Teacher: set user to slot (if a speech needs more time)?
-- Teacher: deleting booked slot needs confirmation
-- User: request double slot for intensive speech? (maybe for pause?)
-- User: possibilty to add a text to a booked slot
+- [ ] Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
+- [ ] Global: add slots to added teacher, when event is active
+- [ ] Global: add eventId to room db for handle different events
+- [ ] Global: deleting slot needs confirmation
+- [ ] Global: update bootstrap and the libs
+- [ ] Admin: room configuration (add, rename, delete, (un)set to teacher)
+- [ ] Admin: unset rooms from all teacher (for new event)
+- [ ] Admin: import rooms [ ]> modify action_csvPreview for room import
+- [ ] Admin: use datetimepicker for bookingDate
+- [ ] Teacher: set user to slot (if a speech needs more time)?
+- [ ] Teacher: deleting booked slot needs confirmation
+- [x] Teacher: select room from a list of free rooms
+- [ ] User: request double slot for intensive speech? (maybe before a pause?)
+- [ ] User: possibilty to add a text to a booked slot
+- [ ] User: show presence of all teachers on book.php (+only selected teachers)
