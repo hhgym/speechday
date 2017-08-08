@@ -10,6 +10,7 @@ class LogDAO extends AbstractDAO {
     const LOG_ACTION_DELETE_SLOT = 4;
     const LOG_ACTION_CHANGE_ATTENDANCE = 5;
     const LOG_ACTION_PAUSE_SLOT = 6;
+    const LOG_ACTION_CHANGE_ROOM = 7;
 
     public static function log($userId, $actionId, $info = null) {
         $con = self::getConnection();

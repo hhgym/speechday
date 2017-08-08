@@ -212,13 +212,13 @@ class Log extends Entity {
 
 class Room extends Entity {
     private $roomNumber;
-    private $name;
+    private $roomName;
     private $teacherId;
 
-    public function __construct($id, $roomNumber, $name, $teacherId) {
+    public function __construct($id, $roomNumber, $roomName, $teacherId) {
         parent::__construct($id);
         $this->roomNumber = $roomNumber;
-        $this->name = $name;
+        $this->roomName = $roomName;
         $this->teacherId = $teacherId;
     }
 
@@ -226,8 +226,8 @@ class Room extends Entity {
         return $this->roomNumber;
     }
 
-    public function getName() {
-        return $this->name;
+    public function getRoomName() {
+        return $this->roomName;
     }
 
     public function getTeacherId() {

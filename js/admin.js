@@ -98,6 +98,12 @@ function validateForm() {
             },
             slotDuration: {
                 required: true
+            },
+            breakFrequency: {
+                required: true
+            },
+            bookingDate: {
+                required: true
             }
 
         },
@@ -106,7 +112,9 @@ function validateForm() {
             date: 'Gib ein Datum ein!',
             beginTime: 'Gib eine Startzeit ein!',
             endTime: 'Gib eine Endzeit ein!',
-            slotDuration: 'Gib eine Dauer für eine Einheit ein!'
+            slotDuration: 'Gib eine Dauer für eine Einheit ein!',
+            breakFrequency: 'Gib eine Dauer zwischen zwei Einheiten ein!',
+            bookingDate: 'Gib ein Buchungsende ein!',
         },
         highlight: function (element) {
             var id_attr = '#' + $(element).attr('id') + '1';
@@ -158,6 +166,11 @@ $(document).on('click', '#btn-upload-file', function (event) {
             if (!confirm('WARNUNG!\n\nBeim Import werden die bestehenden Schüler-Benutzer gelöscht! Soll fortgesetzt werden?')) {
                 return;
             }
+        } else if (uploadType == 'room') {
+            successMessage = 'Die Räume wurden erfolgreich importiert!';
+            if (!confirm('WARNUNG!\n\nBeim Import werden die bestehenden Räume gelöscht! Soll fortgesetzt werden?')) {
+                return;
+            }
         }
 
         var formURL = 'controller.php';
@@ -171,7 +184,7 @@ $(document).on('click', '#btn-upload-file', function (event) {
             success: function (data, textStatus, jqXHR) {
                 if (data.indexOf('success') > -1) {
                     showMessage(message, 'success', successMessage);
-                    if ($.inArray(uploadType, ['teacher', 'student']) > -1) {
+                    if ($.inArray(uploadType, ['teacher', 'student', 'room']) > -1) {
                         $('#csv-preview').load('viewController.php?action=csvPreview&role=' + uploadType, function () {
                             $('#csv-preview').show();
                             displayActiveEvent();

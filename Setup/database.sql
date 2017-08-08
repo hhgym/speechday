@@ -64,7 +64,7 @@ CREATE TABLE `log` (
 CREATE TABLE `room` (
   `id` int(11) NOT NULL,
   `roomNumber` varchar(255) COLLATE utf8_bin NOT NULL,
-  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `roomName` varchar(255) COLLATE utf8_bin NOT NULL,
   `teacherId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

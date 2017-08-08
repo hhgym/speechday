@@ -148,6 +148,7 @@ include_once 'inc/header.php';
                             <select class='form-control' id='inputUploadType' name='uploadType'>
                                 <option value='teacher'>Lehrer</option>
                                 <option value='student'>Schüler</option>
+                                <option value='room'>Räume</option>
                                 <!-- <option value='subject'>Fächer</option> -->
                                 <option value='newsletter'>Rundbrief</option>
                             </select>

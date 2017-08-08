@@ -81,6 +81,37 @@ class Controller {
         echo 'success';
     }
 
+    protected function action_changeRoom() {
+        $roomId = $_REQUEST['roomId'];
+        $userId = $_REQUEST['userId'];
+        $eventId = $_REQUEST['eventId'];
+        
+        if ($roomId == '-1') {
+            echo 'dirtyRead';
+            return;
+        } elseif ($roomId == '0') {
+            $roomId = NULL;
+        }
+        
+        // $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId);
+        
+        $room = RoomDAO::getRoomForTeacherId($userId);
+        
+        if ($room != null) {
+            $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId, true);
+        }
+        
+        $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId);
+        
+        if ($success) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+        
+        return;
+    }
+    
     protected function action_uploadFile() {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
@@ -108,7 +139,7 @@ class Controller {
 
                     //upload file
                     $type = $_REQUEST['uploadType'];
-                    if (in_array($type, array('student', 'teacher', 'subject'))) {
+                    if (in_array($type, array('student', 'teacher', 'subject', 'room'))) {
                         if (!$this->validateFileExtension($ext, array('csv'))) {
                             echo 'Ungültiges Dateiformat!';
                             return;
@@ -168,6 +199,7 @@ class Controller {
         $constraints['teacher'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort', 'Titel', 'Raumnummer', 'Raumname');
         $constraints['student'] = array('Vorname', 'Nachname', 'Klasse', 'Benutzername', 'Passwort');
         $constraints['subject'] = array('ToDo');
+        $constraints['room'] = array('Raumnummer', 'Raumname');
 
         $constraintPart = implode('', $constraints[$type]);
         $length = strlen($constraintPart);
@@ -244,7 +276,7 @@ class Controller {
                 } else {
                     $firstRow = false;
                 }
-            } else {
+            } elseif (in_array($role, array('teacher','student'))) {
                 //insert csv data into mysql table
                 $class = trim($row[2]) != '' ? trim($row[2]) : null;
 
@@ -264,7 +296,7 @@ class Controller {
                     if ($roomNumber != '' && $roomName != '') {
                         $rooms[$userName] = array($roomNumber, $roomName);
                     }
-                } else {
+                } elseif ($role == 'student') {
                     $userName = trim($row[3]);
 
                     $tries = 0;
@@ -287,6 +319,12 @@ class Controller {
                 }
 
                 $users[] = array($userName, createPasswordHash($password), trim($row[0]), trim($row[1]), $class, $role, $title);
+            } elseif ($role == 'room') {
+                $roomNumber = trim($row[0]);
+                $roomName = trim($row[1]);
+                if ($roomNumber != '' && $roomName != '') {
+                    array_push($rooms, array($roomNumber, $roomName));
+                }
             }
         }
 
@@ -295,6 +333,10 @@ class Controller {
         $deleteRoomSuccess = true;
         if ($role == 'teacher') {
             $deleteEventSuccess = EventDAO::deleteAllEvents();
+            $deleteRoomSuccess = RoomDAO::deleteAllRooms();
+        }
+        
+        if ($role == 'room') {
             $deleteRoomSuccess = RoomDAO::deleteAllRooms();
         }
 
@@ -306,11 +348,15 @@ class Controller {
             );
         }
 
-        UserDAO::bulkInsertUsers($users, $rooms);
-        if (count($accessData) > 0) {
-            UserDAO::bulkInsertAccessData($accessData);
+        if (in_array($role, array('teacher','student'))) {
+            UserDAO::bulkInsertUsers($users, $rooms);
+            if (count($accessData) > 0) {
+                UserDAO::bulkInsertAccessData($accessData);
+            }
+        } elseif ($role == 'room') {
+            RoomDAO::bulkInsertRooms($rooms);
         }
-
+          
         fclose($fp);
         return array(
             'success' => true,

@@ -31,3 +31,18 @@ As a student / parent:
 1. Log in with the credentials provided on the newsletter.
 2. Book the desired slots for the desired teacher.
 3. Print your time-table.
+
+## ToDo
+- Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
+- Global: add slots to added teacher, when event is active
+- Global: add eventId to room db for handle different events
+- Global: deleting slot needs confirmation
+- Global: update bootstrap and the libs
+- Admin: room configuration (add, rename, delete, (un)set to teacher)
+- Admin: unset rooms from all teacher (for new event)
+- Admin: import rooms -> modify action_csvPreview for room import
+- Admin: use datetimepicker for bookingDate
+- Teacher: set user to slot (if a speech needs more time)?
+- Teacher: deleting booked slot needs confirmation
+- User: request double slot for intensive speech? (maybe for pause?)
+- User: possibilty to add a text to a booked slot

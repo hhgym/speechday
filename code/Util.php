@@ -81,11 +81,14 @@ function getTeacherOptions() {
 
 function getRoomOptions() {
     $rooms = RoomDAO::getAllFreeRooms();
-
-    $options = '<option value="-1">Bitte wähle einen Raum aus ...</option>';
+    
+    $options = '<option value="-1" selected>Bitte wähle einen Raum aus ...</option>';
+    $options .= '<option value="0">kein Raum</option>';
+    
     foreach ($rooms as $room) {
-        $options .= sprintf('<option value="%s">%s - %s</option>', $room->getId(), $room->getRoomNumber(), $room->getName());
+        $options .= sprintf('<option value="%s">%s - %s</option>', $room->getId(), $room->getRoomNumber(), $room->getRoomName());
     }
+    
 
     return $options;
 }
@@ -110,6 +113,8 @@ function getActionString($actionId) {
             return 'Anwesenheit geändert';
         case 6:
             return 'Pausen geändert';
+        case 7:
+            return 'Raum geändert';
         default:
             return 'Unbekannte Aktion';
     }

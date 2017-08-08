@@ -93,7 +93,7 @@ include_once 'inc/header.php';
                         </button>
                     </form>
 
-                    <div class='message' id='message'></div>
+                    <div class='message-attendance' id='message-attendance'></div>
 
                     <?php endif; ?>
                 </div>
@@ -126,14 +126,37 @@ include_once 'inc/header.php';
             </div>
             <div id='collapse4' class='panel-collapse collapse'>
                 <div class='panel-body'>
-                    <form id='chooseTeacherForm'>
+                    <h4>
+                        Aktueller Raum
+                    </h4>
+                    <p id='room'>
+                        <?php
+                        $event = EventDAO::getActiveEvent();
+                        $viewController = ViewController::getInstance();
+                        $room = $viewController->action_room();
+                        ?>
+                    </p>
+                    
+                    <h4>
+                        Raum ändern
+                    </h4>
+                    <form id='changeRoomForm'>
                         <div class='form-group'>
-                           <label for='selectTeacher'>Verfügbare Räume</label>
-                           <select class='form-control' id='selectTeacher' name='teacher'>
-                               <?php echo(getRoomOptions()); ?>
-                           </select>
+                           <label for='selectRoom'>Verfügbare Räume</label>
+                            <input type='hidden' name='userId' value='<?php echo(escape($user->getId())) ?>'>
+                            <input type='hidden' name='eventId' value='<?php echo(escape($event->getId())) ?>'>
+                            <select class='form-control' id='SelectRoomId' name='roomId'>
+                                <?php echo(getRoomOptions()); ?>
+                            </select>
                         </div>
-               </form>
+                        
+                        <button type='submit' class='btn btn-primary' id='btn-change-room'>
+                            Raum ändern
+                        </button>
+                    </form>
+                    
+                    <div class='message-room' id='message-room'></div>
+                    
                 </div>
             </div>
         </div>
@@ -142,4 +165,3 @@ include_once 'inc/header.php';
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
-
