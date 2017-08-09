@@ -463,18 +463,33 @@ class ViewController extends Controller {
                                           '<br>anwesend bis: ' . escape(toDate($logInfo['toTime'], 'H:i'));
                         } elseif ($log->getAction() == LogDAO::LOG_ACTION_PAUSE_SLOT) {
                             $slot = SlotDAO::getSlotForId($logInfo['slotId']);
-                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) .
-                                          escape(toDate($slot->getDateFrom(), 'H:i') . 'als Pause markiert.');
-                        } elseif ($log->getAction() == LogDAO::LOG_ACTION_CHANGE_ROOM) {
-                            $room = RoomDAO::getRoomForId($logInfo['roomId']);
-                            if ($logInfo['roomIdold'] !== '') {
-                                $roomold = RoomDAO::getRoomForId($logInfo['roomIdold']);
+                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) . ' (' .  escape(toDate($event->getDateFrom(), 'd.m.Y')) . ') ';
+                            if ($logInfo['slotType'] == '1') {
+                                $infoOutput .= '<br> Slot ' . escape(toDate($slot->getDateFrom(), 'H:i') . ' - ' . escape(toDate($slot->getDateTo(), 'H:i')) . ' als Pause markiert.');
+                            } else {
+                                $infoOutput .= '<br> Slot ' . escape(toDate($slot->getDateFrom(), 'H:i') . ' - ' . escape(toDate($slot->getDateTo(), 'H:i')) . ' als frei markiert.');
                             }
-                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) .
-                                          '<br> Raum geändert: ' . escape($room->getRoomNumber() . ' - ' . $room->getRoomName());
-                            if ($logInfo['roomIdold'] !== '') {
+                        } elseif ($log->getAction() == LogDAO::LOG_ACTION_CHANGE_ROOM) {
+                            if ($logInfo['roomIdNew'] != '0') {
+                                $roomNew = RoomDAO::getRoomForId($logInfo['roomIdNew']);
+                            }
+                            if ($logInfo['roomIdOld'] != '0') {
+                                $roomOld = RoomDAO::getRoomForId($logInfo['roomIdOld']);
+                            }
+                            $infoOutput = 'Sprechtag: ' . escape($event->getName());
+                            
+                            if ($logInfo['roomIdNew'] == '0') {
                                 $infoOutput = $infoOutput . 
-                                              '<br> (vorher: ' . escape($roomold->getRoomNumber() . ' - ' . $roomold->getRoomName()) . ')';
+                                            '<br> kein Raum gesetzt' .
+                                            '<br> (vorher: ' . escape($roomOld->getRoomNumber() . ' - ' . $roomOld->getRoomName()) . ')';
+                            } elseif ($logInfo['roomIdOld'] == '0') {
+                                $infoOutput = $infoOutput .
+                                            '<br> Raum geändert: ' . escape($roomNew->getRoomNumber() . ' - ' . $roomNew->getRoomName()) .
+                                            '<br> (vorher: kein Raum)';
+                            } else {
+                                $infoOutput = $infoOutput .
+                                            '<br> Raum geändert: ' . escape($roomNew->getRoomNumber() . ' - ' . $roomNew->getRoomName()) .
+                                            '<br> (vorher: ' . escape($roomOld->getRoomNumber() . ' - ' . $roomOld->getRoomName()) . ')';
                             }
                         }
                     }
@@ -785,15 +800,22 @@ class ViewController extends Controller {
         }
         
         echo $output . '<br><br>';
-        return $room;
     }
     
-    public function action_getFreeRooms() {
-        return $this->getFreeRooms();
-    }
-    
-    private function getFreeRooms($user, $event, $named = false) {
+    public function action_getFreeRoomOptions() {
         echo getRoomOptions();
+    }
+    
+    public function action_setCurrentRoom() {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $room = RoomDAO::getRoomForTeacherId($user->getId());
+        
+        if ($room != null) {
+            $result = $room->getId();
+        } else {
+            $result = '0';
+        }
+        echo $result;
     }
     
     public function action_getActiveEventContainer() {

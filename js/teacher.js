@@ -12,6 +12,9 @@ $(document).ready(function () {
 
 $(document).on('click', '#btn-change-attendance', function () {
     $('#changeAttendanceForm').submit(function (e) {
+        e.preventDefault();
+        $('#changeAttendanceForm').unbind('submit');
+        
         var postData = $(this).serializeArray();
         postData = postData.concat({name: 'action', value: 'changeAttendance'});
 
@@ -35,14 +38,16 @@ $(document).on('click', '#btn-change-attendance', function () {
                 showMessage(message, 'danger', 'Die Anwesenheit konnte nicht geändert werden!');
             }
         });
-        e.preventDefault();
     });
     return true;
 });
 
 
-$(document).on('click', '#btn-change-room', function () {
+$(document).on('click', '#btn-change-room', function (event) {
     $('#changeRoomForm').submit(function (e) {
+        e.preventDefault();
+        $('#changeRoomForm').unbind('submit');
+        
         var postData = $(this).serializeArray();
         postData = postData.concat({name: 'action', value: 'changeRoom'});
 
@@ -55,8 +60,12 @@ $(document).on('click', '#btn-change-room', function () {
                 var message = $('#message-room');
                 if (data.indexOf('success') > -1) {
                     $('#room').load('viewController.php?action=room');
-                    $('#SelectRoomId').load('viewController.php?action=getFreeRooms');
-
+                    $('#SelectRoomId').load('viewController.php?action=getFreeRoomOptions');
+                    
+                    // $.get('viewController.php?action=setCurrentRoom', function(data){
+                        // $('input[name="roomIdOld"]').val(data);
+                    // });
+                    
                     showMessage(message, 'success', 'Der Raum wurde erfolgreich geändert!');
                 } else if (data.indexOf('dirtyRead') > -1) {
                     showMessage(message, 'warning', 'Bitte wähle einen Raum aus!');
@@ -68,7 +77,6 @@ $(document).on('click', '#btn-change-room', function () {
                 showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
             }
         });
-        e.preventDefault();
     });
     return true;
 });

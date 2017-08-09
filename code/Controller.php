@@ -86,24 +86,30 @@ class Controller {
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
         
-        if ($roomId == '-1') {
-            echo 'dirtyRead';
-            return;
-        } elseif ($roomId == '0') {
-            $roomId = NULL;
-        }
-        
-        // $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId);
-        
         $room = RoomDAO::getRoomForTeacherId($userId);
         
         if ($room != null) {
-            $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId, true);
+            $roomIdOld = $room->getId();
+            
+        } else {
+            $roomIdOld = '0';
         }
         
+        if ($roomId == '-1' || $roomId == $roomIdOld ) {
+            echo 'dirtyRead';
+            return;
+        }
+        
+        if (roomIdOld !== '0') {
+            //unset current room from teacher
+            $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId, true);
+        }
+
         $success = RoomDAO::updateRoomForTeacher($roomId, $userId, $eventId);
         
         if ($success) {
+            $info = json_encode(array('eventId' => $eventId, 'roomIdNew' => $roomId, 'roomIdOld' => $roomIdOld));
+            LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
             echo 'success';
         } else {
             echo 'failure';
@@ -402,7 +408,7 @@ class Controller {
         $teacherId = $_REQUEST['teacherId'];
         $eventId = $_REQUEST['eventId'];
 
-        $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
+        $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId, 'slotType' => $slotType));
         LogDAO::log($teacherId, LogDAO::LOG_ACTION_PAUSE_SLOT, $info);
 
         $result = SlotDAO::togglePauseToSlot($eventId, $teacherId, $slotId, $slotType);

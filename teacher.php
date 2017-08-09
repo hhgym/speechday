@@ -133,7 +133,13 @@ include_once 'inc/header.php';
                         <?php
                         $event = EventDAO::getActiveEvent();
                         $viewController = ViewController::getInstance();
-                        $room = $viewController->action_room();
+                        $viewController->action_room();
+                        // $roomIdOld = $viewController->action_room();
+                        // if (is_null($room)) {
+                            // $roomIdOld = '0';
+                        // } else {
+                            // $roomIdOld = $room->getId();
+                        // }
                         ?>
                     </p>
                     

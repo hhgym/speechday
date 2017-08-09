@@ -104,48 +104,43 @@ class RoomDAO extends AbstractDAO {
         // return $result['success'];
     // }
     
-    public static function setRoomForTeacher($roomId, $userId, $eventId) {
+    // public static function setRoomForTeacher($roomId, $userId, $eventId) {
         
         
-        $con = self::getConnection();
+        // $con = self::getConnection();
         
-        $result = self::query($con, 'UPDATE room SET teacherId = ? WHERE id = ?;', array($userId, $roomId), true);
+        // $result = self::query($con, 'UPDATE room SET teacherId = ? WHERE id = ?;', array($userId, $roomId), true);
         
-        $info = json_encode(array('eventId' => $eventId, 'roomId' => $roomId));
-        LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
+        // $info = json_encode(array('eventId' => $eventId, 'roomId' => $roomId));
+        // LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
         
-        return $result['success'];
-    }
+        // return $result['success'];
+    // }
     
-    public static function unsetRoomForTeacher($roomId, $userId, $eventId) {
+    // public static function unsetRoomForTeacher($roomId, $userId, $eventId) {
         
-        $room = self::getRoomForTeacherId($userId);
+        // $room = self::getRoomForTeacherId($userId);
         
-        $con = self::getConnection();
+        // $con = self::getConnection();
         
-        $result = self::query($con, 'UPDATE room SET teacherId = ? WHERE id = ?;', array($userId, $roomId), true);
+        // $result = self::query($con, 'UPDATE room SET teacherId = ? WHERE id = ?;', array($userId, $roomId), true);
         
-        $info = json_encode(array('eventId' => $eventId, 'roomId' => $roomId));
-        LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
+        // $info = json_encode(array('eventId' => $eventId, 'roomId' => $roomId));
+        // LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
         
-        return $result['success'];
-    }
+        // return $result['success'];
+    // }
     
     
     public static function updateRoomForTeacher($roomId, $userId, $eventId, $setnull = false) {
         
-        
         $con = self::getConnection();
         
         if ($setnull) {
-            // $room = self::getRoomForTeacherId($userId);
             $result = self::query($con, 'UPDATE room SET teacherId = NULL WHERE teacherId = ?;', array($userId), true);
         } else {
             $result = self::query($con, 'UPDATE room SET teacherId = ? WHERE id = ?;', array($userId, $roomId), true);
         }
-        
-        $info = json_encode(array('eventId' => $eventId, 'roomId' => $roomId));
-        LogDAO::log($userId, LogDAO::LOG_ACTION_CHANGE_ROOM, $info);
         
         return $result['success'];
     }
