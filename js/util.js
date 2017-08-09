@@ -24,7 +24,7 @@ function PrintElem(elem, pageTitle) {
     doc.write(data);
     doc.write("</body></html>");
     doc.close();
-
+     
     // function show() {
         // if (doc.readyState === "complete") {
             // printWindow.document.close();
@@ -32,17 +32,27 @@ function PrintElem(elem, pageTitle) {
             // printWindow.print();
             // printWindow.close();
         // } else {
-            // setTimeout(show, 100);
+            // setTimeout(show(), 100);
         // }
     // }
-
     // show();
-    setTimeout(function(){
+    
+    // Wait until PDF is ready to print 
+    printWindow.onload = function () {
+        printWindow.document.close();
+        printWindow.focus();
         printWindow.print();
         printWindow.close();
-        },
-        100
-    );
+    };
+
+    // setTimeout(function(){
+        // printWindow.document.close();
+        // printWindow.focus();
+        // printWindow.print();
+        // printWindow.close();
+        // },
+        // 100
+    // );
     
 }
 
