@@ -33,6 +33,9 @@ As a student / parent:
 3. Print your time-table.
 
 ## ToDo
+- [ ] Global: admin can be a teacher (add room)
+- [ ] Global: print timetable isn't styled
+- [ ] Global: export timetable as pdf
 - [ ] Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
 - [ ] Global: add slots to added teacher, when event is active
 - [ ] Global: add eventId to room db for handle different events
@@ -40,7 +43,8 @@ As a student / parent:
 - [ ] Global: update bootstrap and the libs
 - [ ] Admin: room configuration (add, rename, delete, (un)set to teacher)
 - [ ] Admin: unset rooms from all teacher (for new event)
-- [ ] Admin: import rooms [ ]> modify action_csvPreview for room import
+- [x] Admin: import rooms
+- [ ] Admin: modify action_csvPreview for room import
 - [ ] Admin: use datetimepicker for bookingDate
 - [ ] Teacher: set user to slot (if a speech needs more time)?
 - [ ] Teacher: deleting booked slot needs confirmation
