@@ -34,7 +34,7 @@ As a student / parent:
 
 ## ToDo
 - [ ] Global: admin can be a teacher (add room)
-- [ ] Global: print timetable isn't styled
+- [x] Global: print timetable isn't styled
 - [ ] Global: export timetable as pdf
 - [ ] Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
 - [ ] Global: add slots to added teacher, when event is active
