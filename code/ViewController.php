@@ -124,7 +124,7 @@ class ViewController extends Controller {
                                     id='btn-book-<?php echo($slot->getId()) ?>' value='<?php echo($bookJson) ?>'>buchen
                             </button>
                         <?php endif; ?>
-                    </td
+                    </td>
                 </tr>
             <?php endif; ?>
             <?php endforeach; ?>
