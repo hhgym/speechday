@@ -5,6 +5,7 @@ require_once('dao/Entities.php');
 require_once('dao/UserDAO.php');
 require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
+require_once('dao/RoomDAO.php');
 
 class ViewController extends Controller {
 
@@ -88,7 +89,7 @@ class ViewController extends Controller {
         ?>
         <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
         <?php if ($room != null): ?>
-            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
+            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getRoomName())) ?></h4>
         <?php endif; ?>
         <table class='table table-hover es-time-table'>
             <thead>
@@ -158,7 +159,7 @@ class ViewController extends Controller {
         <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
 
         <?php if ($room != null): ?>
-            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getName())) ?></h4>
+            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getRoomName())) ?></h4>
         <?php endif; ?>
 
         <table class='table table-hover es-time-table'>
@@ -250,7 +251,7 @@ class ViewController extends Controller {
                 $roomTd = "";
                 if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)) {
                     $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
-                    $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getName());
+                    $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getRoomName());
                 }
                 ?>
                 <?php if ($isFullView || !$studentAvailable): ?>
@@ -311,7 +312,7 @@ class ViewController extends Controller {
             $headerText = "Termine für " . $teacher->getTitle(). " ". $teacher->getFirstName() . " " . $teacher->getLastName();
             $room = RoomDAO::getRoomForTeacherId($teacher->getId());
             if ($room != null) {
-                $headerText .= " (Raum: " . $room->getRoomNumber() . " | " . $room->getName() . ")";
+                $headerText .= " (Raum: " . $room->getRoomNumber() . " | " . $room->getRoomName() . ")";
             }
         }
 
@@ -397,7 +398,7 @@ class ViewController extends Controller {
                         $room = $rooms[$user->getId()];
                         $val = json_decode($user->__toString(), true);
                         $val['roomNumber'] = $room->getRoomNumber();
-                        $val['roomName'] = $room->getName();
+                        $val['roomName'] = $room->getRoomName();
                         $val['absent'] = $user->isAbsent();
                         $val = json_encode($val);
                     }
@@ -460,10 +461,36 @@ class ViewController extends Controller {
                             $infoOutput = 'Sprechtag: ' . escape($event->getName()) .
                                           '<br>anwesend von: ' . escape(toDate($logInfo['fromTime'], 'H:i')) .
                                           '<br>anwesend bis: ' . escape(toDate($logInfo['toTime'], 'H:i'));
-                        } else {
+                        } elseif ($log->getAction() == LogDAO::LOG_ACTION_PAUSE_SLOT) {
                             $slot = SlotDAO::getSlotForId($logInfo['slotId']);
-                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) . '<br>Termin: ' .
-                                          escape(toDate($slot->getDateFrom(), 'H:i'));
+                            $infoOutput = 'Sprechtag: ' . escape($event->getName()) . ' (' .  escape(toDate($event->getDateFrom(), 'd.m.Y')) . ') ';
+                            if ($logInfo['slotType'] == '1') {
+                                $infoOutput .= '<br> Slot ' . escape(toDate($slot->getDateFrom(), 'H:i') . ' - ' . escape(toDate($slot->getDateTo(), 'H:i')) . ' als Pause markiert.');
+                            } else {
+                                $infoOutput .= '<br> Slot ' . escape(toDate($slot->getDateFrom(), 'H:i') . ' - ' . escape(toDate($slot->getDateTo(), 'H:i')) . ' als frei markiert.');
+                            }
+                        } elseif ($log->getAction() == LogDAO::LOG_ACTION_CHANGE_ROOM) {
+                            if ($logInfo['roomIdNew'] != '0') {
+                                $roomNew = RoomDAO::getRoomForId($logInfo['roomIdNew']);
+                            }
+                            if ($logInfo['roomIdOld'] != '0') {
+                                $roomOld = RoomDAO::getRoomForId($logInfo['roomIdOld']);
+                            }
+                            $infoOutput = 'Sprechtag: ' . escape($event->getName());
+                            
+                            if ($logInfo['roomIdNew'] == '0') {
+                                $infoOutput = $infoOutput . 
+                                            '<br> kein Raum gesetzt' .
+                                            '<br> (vorher: ' . escape($roomOld->getRoomNumber() . ' - ' . $roomOld->getRoomName()) . ')';
+                            } elseif ($logInfo['roomIdOld'] == '0') {
+                                $infoOutput = $infoOutput .
+                                            '<br> Raum geändert: ' . escape($roomNew->getRoomNumber() . ' - ' . $roomNew->getRoomName()) .
+                                            '<br> (vorher: kein Raum)';
+                            } else {
+                                $infoOutput = $infoOutput .
+                                            '<br> Raum geändert: ' . escape($roomNew->getRoomNumber() . ' - ' . $roomNew->getRoomName()) .
+                                            '<br> (vorher: ' . escape($roomOld->getRoomNumber() . ' - ' . $roomOld->getRoomName()) . ')';
+                            }
                         }
                     }
                 }
@@ -610,6 +637,27 @@ class ViewController extends Controller {
                     </ul>
                     </p>';
                 break;
+                
+            case 'room':
+                $typeText = 'Räume Vorlage (CSV)';
+                $mimeType = 'text/csv';
+                $filePath = 'templates/rooms.csv';
+                $infos = '<br><br>
+                    <p><b>Infos:</b></p>
+                    <p>
+                    Ein Datensatz muss folgende Elemente besitzen:
+                    <br>
+                    Raumnummer;Raumname
+                    <br><br>
+                    Trennzeichen muss der Strichpunkt sein.
+                    <br><br>
+                    Beispiele:
+                    <ul>
+                        <li>015;Klassenraum</li>
+                        <li>113;Physik Vorlesung</li>
+                    </ul>
+                    </p>';
+                break;
 
             case 'newsletter':
             default:
@@ -725,6 +773,51 @@ class ViewController extends Controller {
         <?php endif;
     }
 
+    public function action_room() {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $event = EventDAO::getActiveEvent();
+
+        return $this->getRoom($user, $event);
+    }
+    
+    private function getRoom($user, $event, $named = false) {
+
+        if ($user != null) {
+            $room = RoomDAO::getRoomForTeacherId($user->getId());
+            if ($named) {
+                $output = escape($user->getFirstName() . ' ' . $user->getLastName() . ' ist am ' . date('d.m.Y', $event->getDateFrom()) . ' im Raum ' . $room['roomNumber'] . ' - ' . $room['roomName']);
+            }
+        }
+
+        if ($event != null) {
+            if ($room != null) {
+                $output = escape('Du bist am ' . date('d.m.Y', $event->getDateFrom()) . ' im Raum ' . $room->getRoomNumber() . ' (' . $room->getRoomName(). ')');
+            } else {
+                $output = escape('Du hast noch keinen Raum für den aktuellen Elternsprechtag am ' . date('d.m.Y', $event->getDateFrom()) . ' festgelegt.');
+            }
+        } else {
+            $output = escape('Es gibt momentan keinen aktuellen Elternsprechtag, für den ein Raum eingestellt werden könnte.');
+        }
+        
+        echo $output . '<br><br>';
+    }
+    
+    public function action_getFreeRoomOptions() {
+        echo getRoomOptions();
+    }
+    
+    public function action_setCurrentRoom() {
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $room = RoomDAO::getRoomForTeacherId($user->getId());
+        
+        if ($room != null) {
+            $result = $room->getId();
+        } else {
+            $result = '0';
+        }
+        echo $result;
+    }
+    
     public function action_getActiveEventContainer() {
         $event = EventDAO::getActiveEvent();
         $displayText = "kein aktiver Elternsrpechtag vorhanden!";

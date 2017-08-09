@@ -12,6 +12,9 @@ $(document).ready(function () {
 
 $(document).on('click', '#btn-change-attendance', function () {
     $('#changeAttendanceForm').submit(function (e) {
+        e.preventDefault();
+        $('#changeAttendanceForm').unbind('submit');
+        
         var postData = $(this).serializeArray();
         postData = postData.concat({name: 'action', value: 'changeAttendance'});
 
@@ -21,7 +24,7 @@ $(document).on('click', '#btn-change-attendance', function () {
             type: 'POST',
             data: postData,
             success: function (data, textStatus, jqXHR) {
-                var message = $('#message');
+                var message = $('#message-attendance');
                 if (data.indexOf('success') > -1) {
                     $('#attendance').load('viewController.php?action=attendance');
 
@@ -35,11 +38,48 @@ $(document).on('click', '#btn-change-attendance', function () {
                 showMessage(message, 'danger', 'Die Anwesenheit konnte nicht geändert werden!');
             }
         });
-        e.preventDefault();
     });
     return true;
 });
 
+
+$(document).on('click', '#btn-change-room', function (event) {
+    $('#changeRoomForm').submit(function (e) {
+        e.preventDefault();
+        $('#changeRoomForm').unbind('submit');
+        
+        var postData = $(this).serializeArray();
+        postData = postData.concat({name: 'action', value: 'changeRoom'});
+
+        var formURL = 'controller.php';
+        $.ajax({
+            url: formURL,
+            type: 'POST',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                var message = $('#message-room');
+                if (data.indexOf('success') > -1) {
+                    $('#room').load('viewController.php?action=room');
+                    $('#SelectRoomId').load('viewController.php?action=getFreeRoomOptions');
+                    
+                    // $.get('viewController.php?action=setCurrentRoom', function(data){
+                        // $('input[name="roomIdOld"]').val(data);
+                    // });
+                    
+                    showMessage(message, 'success', 'Der Raum wurde erfolgreich geändert!');
+                } else if (data.indexOf('dirtyRead') > -1) {
+                    showMessage(message, 'warning', 'Bitte wähle einen Raum aus!');
+                } else {
+                    showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
+            }
+        });
+    });
+    return true;
+});
 
 function loadTimeTable(typeId) {
     var timeTable = $('#timeTable');

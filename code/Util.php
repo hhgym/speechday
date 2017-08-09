@@ -1,6 +1,7 @@
 <?php
 
 require_once('dao/EventDAO.php');
+require_once('dao/RoomDAO.php');
 
 function escape($string) {
 	return nl2br(htmlentities($string));
@@ -78,6 +79,22 @@ function getTeacherOptions() {
     return $options;
 }
 
+function getRoomOptions() {
+    $rooms = RoomDAO::getAllFreeRooms();
+    
+    $options = '<option value="-1" selected>Bitte wähle einen Raum aus ...</option>';
+    $options .= '<option value="0">kein Raum</option>';
+    
+    foreach ($rooms as $room) {
+        $options .= sprintf('<option value="%s">%s - %s</option>', $room->getId(), $room->getRoomNumber(), $room->getRoomName());
+    }
+    
+
+    return $options;
+}
+
+
+
 function toDate($timestamp, $format) {
     return date($format, $timestamp);
 }
@@ -96,6 +113,8 @@ function getActionString($actionId) {
             return 'Anwesenheit geändert';
         case 6:
             return 'Pausen geändert';
+        case 7:
+            return 'Raum geändert';
         default:
             return 'Unbekannte Aktion';
     }

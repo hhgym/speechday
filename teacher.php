@@ -25,7 +25,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='collapse1' class='panel-collapse collapse'>
+            <div id='collapse1' class='panel-collapse collapse in'>
                 <div class='panel-body'>
                     <form id='chooseMySlotsForm'>
                         <div class='form-group'>
@@ -93,7 +93,7 @@ include_once 'inc/header.php';
                         </button>
                     </form>
 
-                    <div class='message' id='message'></div>
+                    <div class='message-attendance' id='message-attendance'></div>
 
                     <?php endif; ?>
                 </div>
@@ -104,19 +104,70 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse3'>
-                        Meine Pausen
+                        Pausen
                     </a>
                 </h4>
             </div>
-            <div id='collapse3' class='panel-collapse collapse in'>
+            <div id='collapse3' class='panel-collapse collapse'>
                 <div class='panel-body'>
                     <div id='SlotsTablePauses'></div>
                 </div>
             </div>
         </div>
-
+        
+        
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapse4'>
+                        Raum
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse4' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <h4>
+                        Aktueller Raum
+                    </h4>
+                    <p id='room'>
+                        <?php
+                        $event = EventDAO::getActiveEvent();
+                        $viewController = ViewController::getInstance();
+                        $viewController->action_room();
+                        // $roomIdOld = $viewController->action_room();
+                        // if (is_null($room)) {
+                            // $roomIdOld = '0';
+                        // } else {
+                            // $roomIdOld = $room->getId();
+                        // }
+                        ?>
+                    </p>
+                    
+                    <h4>
+                        Raum ändern
+                    </h4>
+                    <form id='changeRoomForm'>
+                        <div class='form-group'>
+                           <label for='selectRoom'>Verfügbare Räume</label>
+                            <input type='hidden' name='userId' value='<?php echo(escape($user->getId())) ?>'>
+                            <input type='hidden' name='eventId' value='<?php echo(escape($event->getId())) ?>'>
+                            <select class='form-control' id='SelectRoomId' name='roomId'>
+                                <?php echo(getRoomOptions()); ?>
+                            </select>
+                        </div>
+                        
+                        <button type='submit' class='btn btn-primary' id='btn-change-room'>
+                            Raum ändern
+                        </button>
+                    </form>
+                    
+                    <div class='message-room' id='message-room'></div>
+                    
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
 <?php include_once 'inc/footer.php'; ?>
-
