@@ -49,17 +49,27 @@ class Controller {
         $slotDuration = $_REQUEST['slotDuration'];
         $breakFrequency = $_REQUEST['breakFrequency'];
         $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
-        $bookingDate = $_REQUEST['bookingDate'];
+        $bookingDateStart = $_REQUEST['bookingDateStart'];
+        $bookingDateEnd = $_REQUEST['bookingDateEnd'];
 
         $unixTimeFrom = strtotime($date . ' ' . $beginTime);
         $unixTimeTo = strtotime($date . ' ' . $endTime);
-        $finalPostDate = strtotime($bookingDate);
-
+        
         if (!$unixTimeFrom || !$unixTimeTo) {
             return;
         }
+        
+        $startPostDate = strtotime($bookingDateStart);
+        if (!$bookingDateStart) {
+            $startPostDate = time();
+        }
+                
+        $finalPostDate = strtotime($bookingDateEnd);
+        if (!$finalPostDate) {
+            $finalPostDate = strtotime($date . ' 0:00');
+        }
 
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $breakFrequency, $setActive, $finalPostDate);
+        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $breakFrequency, $setActive, $startPostDate, $finalPostDate);
         if ($eventId > 0) {
             echo 'success';
         }

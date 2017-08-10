@@ -19,15 +19,23 @@ class EventDAO extends AbstractDAO {
         return $events;
     }
 
-    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $setActive, $finalPostDate) {
+    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $setActive, $startPostDate, $finalPostDate) {
         $con = self::getConnection();
 
         if (($dateTo - $dateFrom < 0) || (count(EventDAO::getEventsForDate($dateFrom)) > 0)) {
             return -1;
         }
+        
+        if (($finalPostDate - $startPostDate < 0)) {
+            return -1;
+        }
+        
+        if (($dateFrom - $finalPostDate < 0)) {
+            return -1;
+        }
 
         self::getConnection()->beginTransaction();
-        self::query($con, 'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, breakFrequency, finalPostDate) VALUES (?, ?, ?, ?, ?, ?);', array($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $finalPostDate));
+        self::query($con, 'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, breakFrequency, startPostDate, finalPostDate) VALUES (?, ?, ?, ?, ?, ?, ?);', array($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $startPostDate, $finalPostDate));
         $eventId = self::lastInsertId($con);
 
         $teachers = UserDAO::getUsersForRole('teacher');
