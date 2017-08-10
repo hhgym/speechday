@@ -5,6 +5,9 @@ body {
     overflow-y: scroll;
     background: #EBECEE;
 }
+.inline-form {
+  display: inline;
+}
 
 .form-signin {
     max-width: 500px;
