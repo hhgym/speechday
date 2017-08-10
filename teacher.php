@@ -41,6 +41,12 @@ include_once 'inc/header.php';
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
                     </button>
 
+                    <form method="post" action="controller.php?action=downloadICS" class="inline-form" >
+                        <button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
+                            <span class='glyphicon glyphicon-calendar'></span>&nbsp;&nbsp;Zeitplan als ics Datei
+                        </button>
+                    </form>
+
                     <div id='timeTable' class="section-to-print"></div>
                 </div>
             </div>
