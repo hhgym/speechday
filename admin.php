@@ -96,16 +96,37 @@ include_once 'inc/header.php';
                             </select>
                         </div>
 
-
                         <div class='form-group'>
-                            <label for='inputDate'>Buchungsende</label>
-                            <div class='input-group input-append date' id='datePickerBooking'>
-                                <input type='text' class='form-control' id='bookingDate' name='bookingDate'>
+                            <label for='inputDate'>Buchungsanfang (optional, Standard: jetzt)</label>
+                            <div class='input-group input-append date' id='datePickerBookingStart'>
+                                <input type='text' class='form-control' id='bookingDateStart' name='bookingDateStart'>
+                                <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            $('#datePickerBookingStart').datepicker({
+                                container: '#datePicker',
+                                startDate: '0d',
+                                autoclose: true,
+                                format: 'dd.mm.yyyy',
+                                language: 'de',
+                                daysOfWeekDisabled: '0,6',
+                                daysOfWeekHighlighted: '1,2,3,4,5',
+                                calendarWeeks: true,
+                                todayHighlight: true
+                            });
+                        </script>                        
+                        
+                        <div class='form-group'>
+                            <label for='inputDate'>Buchungsende (optional, Standard: Datum 0:00 Uhr)</label>
+                            <div class='input-group input-append date' id='datePickerBookingEnd'>
+                                <input type='text' class='form-control' id='bookingDateEnd' name='bookingDateEnd'>
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
 <script>
-                            $('#datePickerBooking').datetimepicker({
+                            $('#datePickerBookingEnd').datetimepicker({
                                 format: 'dd.mm.yyyy hh:ii',
                                 language: 'de',
 });</script>
@@ -118,8 +139,7 @@ include_once 'inc/header.php';
     moment("2015-12-25 10:00")]
                             });
                         </script> -->
-
-
+                        
                         <div class='form-group'>
                             <label><input type='checkbox' name='setActive[]'> als aktiven Elternsrpechtag setzen</label>
                         </div>

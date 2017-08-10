@@ -102,8 +102,11 @@ function validateForm() {
             breakFrequency: {
                 required: true
             },
-            bookingDate: {
-                required: true
+            bookingDateStart: {
+                required: false
+            },
+            bookingDateEnd: {
+                required: false
             }
 
         },
@@ -114,7 +117,8 @@ function validateForm() {
             endTime: 'Gib eine Endzeit ein!',
             slotDuration: 'Gib eine Dauer für eine Einheit ein!',
             breakFrequency: 'Gib eine Dauer zwischen zwei Einheiten ein!',
-            bookingDate: 'Gib ein Buchungsende ein!',
+            bookingDateStart: 'Gib ein Buchungsanfang ein!',
+            bookingDateEnd: 'Gib ein Buchungsende ein!',
         },
         highlight: function (element) {
             var id_attr = '#' + $(element).attr('id') + '1';

@@ -46,6 +46,7 @@ As a student / parent:
 - [x] Admin: import rooms
 - [ ] Admin: modify action_csvPreview for room import
 - [ ] Admin: use datetimepicker for bookingDate
+- [ ] Admin: detailed error msg
 - [ ] Teacher: set user to slot (if a speech needs more time)?
 - [ ] Teacher: deleting booked slot needs confirmation
 - [x] Teacher: select room from a list of free rooms
