@@ -684,78 +684,49 @@ class Controller {
         }
     }
     
-    // protected function action_downloadICS() {
-
-        // $user = AuthenticationManager::getAuthenticatedUser();
-        // $activeEvent = EventDAO::getActiveEvent();
-        // $slots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
-        
-        // header('Content-type: text/calendar; charset=utf-8');
-        // header('Content-Disposition: attachment; filename=invite.ics');
-        
-        // $result = '';
-        
-        // foreach ($slots as $slot) {
-            
-            // $tz = 'Europe/Berlin';
-            // $timestampFrom = $slot['dateFrom'];
-            // $dtFrom = new DateTime("now", new DateTimeZone($tz));
-            // $dtFrom->setTimestamp($timestamp);
-            // $timestampTo = $slot['dateTo'];
-            // $dtTo = new DateTime("now", new DateTimeZone($tz));
-            // $dtTo->setTimestamp($timestamp);
-            
-            // $ics = new ICS(array(
-                // 'location' => 'Heinrich-Hertz-Gymnasium, Rigaer Straße 81-82, 10247 Berlin',
-                // 'description' => $slot['teacherName'],
-                // 'dtstart' => $dtFrom->format('d.m.Y, H:i'),
-                // 'dtend' => $dtTo->format('d.m.Y, H:i'),
-                // 'summary' => $activeEvent->getName(),
-                // 'url' => 'https://www.hhgym.de'
-            // ));
-            // $result .= $ics->to_string();
-            // $result .= "\r\n\r\n";
-        // }
-        
-
-        // echo $result;
-    // }
-
     protected function action_downloadICS() {
         
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
-        $slots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
         
         header('Content-type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename=invite.ics');
         
-        $result = '';
-        
         $eventName = $activeEvent->getName();
+        
+        if ($user->getRole() == 'student') {
+            $slots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        } else {
+            $slots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $user->getId());
+        }
         
         $cal = new SimpleICS();
         
         foreach ($slots as $slot) {
-           
-            $room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
+            
+            if ($user->getRole() == 'student') {
+                $meetingPersonName = $slot['teacherName'];
+                $room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
+            } else {
+                $meetingPersonName = $slot['studentName'] . ' ' . $slot['studentClass'];
+                $room = RoomDAO::getRoomForTeacherId($user->getId());
+            }
+            
+            $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
+            $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
+
             if ($room != null) {
                 $roomString = '\r\nRaum: ' . $room->getRoomNumber() . ' - ' . $room->getRoomName();
             } else {
                 $roomString = '';
             }
             
-            $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
-            $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
-            
-            $teacherName = $slot['teacherName'];
-            
-            $cal->addEvent(function($e) use ($dateFrom, $dateTo, $teacherName, $eventName, $roomString) {
+            $cal->addEvent(function($e) use ($dateFrom, $dateTo, $meetingPersonName, $eventName, $roomString) {
                 $e->startDate = new DateTime($dateFrom);
                 $e->endDate = new DateTime($dateTo);
                 $e->uri = 'https://www.hhgym.de';
                 $e->location = 'Heinrich-Hertz-Gymnasium, Rigaer Straße 81-82, 10247 Berlin';
-                $e->description = $teacherName . $roomString;
+                $e->description = $meetingPersonName . $roomString;
                 $e->summary = $eventName;
             });
         }
