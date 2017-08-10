@@ -41,6 +41,7 @@ As a student / parent:
 - [ ] Global: add eventId to room db for handle different events
 - [ ] Global: deleting slot needs confirmation
 - [ ] Global: update bootstrap and the libs
+- [ ] Global: log more action like change pwd, presence, ...
 - [ ] Admin: room configuration (add, rename, delete, (un)set to teacher)
 - [ ] Admin: unset rooms from all teacher (for new event)
 - [x] Admin: import rooms
@@ -50,6 +51,7 @@ As a student / parent:
 - [ ] Teacher: set user to slot (if a speech needs more time)?
 - [ ] Teacher: deleting booked slot needs confirmation
 - [x] Teacher: select room from a list of free rooms
+- [x] User: change passwort in profile
 - [ ] User: request double slot for intensive speech? (maybe before a pause?)
 - [ ] User: possibilty to add a text to a booked slot
 - [ ] User: show presence of all teachers on book.php (+only selected teachers)

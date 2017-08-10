@@ -5,6 +5,7 @@ require_once('dao/EventDAO.php');
 require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
+// require_once('SimpleICS.php');
 
 class Controller {
     // request wide singleton
@@ -537,6 +538,24 @@ class Controller {
         }
     }
 
+    protected function action_editUserPwd() {
+        $userId = $_REQUEST['userId'];
+        $userName = $_REQUEST['userName'];
+        $password = $_REQUEST['password'];
+        $firstName = $_REQUEST['firstName'];
+        $lastName = $_REQUEST['lastName'];
+        $class = $_REQUEST['class'];
+        $type = $_REQUEST['type'];
+
+        $updateUserResult = UserDAO::update($userId, $userName, $password, $firstName, $lastName, $class, $type);
+
+        if ($updateUserResult) {
+            echo('success');
+        } else {
+            echo('error');
+        }
+    }
+    
     protected function action_createNewsletter() {
         if (!UserDAO::checkAccessData()) {
             echo 'Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!';
@@ -682,4 +701,85 @@ class Controller {
             echo 'failure';
         }
     }
+    
+    // protected function action_downloadICS() {
+
+        // $user = AuthenticationManager::getAuthenticatedUser();
+        // $activeEvent = EventDAO::getActiveEvent();
+        // $slots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        
+        // header('Content-type: text/calendar; charset=utf-8');
+        // header('Content-Disposition: attachment; filename=invite.ics');
+        
+        // $result = '';
+        
+        // foreach ($slots as $slot) {
+            
+            // $tz = 'Europe/Berlin';
+            // $timestampFrom = $slot['dateFrom'];
+            // $dtFrom = new DateTime("now", new DateTimeZone($tz));
+            // $dtFrom->setTimestamp($timestamp);
+            // $timestampTo = $slot['dateTo'];
+            // $dtTo = new DateTime("now", new DateTimeZone($tz));
+            // $dtTo->setTimestamp($timestamp);
+            
+            // $ics = new ICS(array(
+                // 'location' => 'Heinrich-Hertz-Gymnasium, Rigaer Straße 81-82, 10247 Berlin',
+                // 'description' => $slot['teacherName'],
+                // 'dtstart' => $dtFrom->format('d.m.Y, H:i'),
+                // 'dtend' => $dtTo->format('d.m.Y, H:i'),
+                // 'summary' => $activeEvent->getName(),
+                // 'url' => 'https://www.hhgym.de'
+            // ));
+            // $result .= $ics->to_string();
+            // $result .= "\r\n\r\n";
+        // }
+        
+
+        // echo $result;
+    // }
+
+    // protected function action_downloadICS() {
+        
+        // $user = AuthenticationManager::getAuthenticatedUser();
+        // $activeEvent = EventDAO::getActiveEvent();
+        // $slots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        
+        // header('Content-type: text/calendar; charset=utf-8');
+        // header('Content-Disposition: attachment; filename=invite.ics');
+        
+        // $result = '';
+        
+        // $eventName = $activeEvent->getName();
+        
+        // $cal = new SimpleICS();
+        
+        // foreach ($slots as $slot) {
+           
+            // $room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
+            // if ($room != null) {
+                // $roomString = '\r\nRaum: ' . $room->getRoomNumber() . ' - ' . $room->getRoomName();
+            // } else {
+                // $roomString = '';
+            // }
+            
+            // $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
+            // $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
+            
+            // $teacherName = $slot['teacherName'];
+            
+            // $cal->addEvent(function($e) use ($dateFrom, $dateTo, $teacherName, $eventName, $roomString) {
+                // $e->startDate = new DateTime($dateFrom);
+                // $e->endDate = new DateTime($dateTo);
+                // $e->uri = 'https://www.hhgym.de';
+                // $e->location = 'Heinrich-Hertz-Gymnasium, Rigaer Straße 81-82, 10247 Berlin';
+                // $e->description = $teacherName . $roomString;
+                // $e->summary = $eventName;
+            // });
+        // }
+        
+        // echo $cal->serialize();
+        
+    // }
+    
 }
