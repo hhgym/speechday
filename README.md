@@ -1,3 +1,5 @@
+**This fork isn't compatible to the original.**
+
 # SpeechDay
 
 This project can be used to easily and effectively hold a speechday (a parent-teacher-meeting) in your school.
@@ -34,24 +36,33 @@ As a student / parent:
 
 ## ToDo
 - [ ] Global: admin can be a teacher (add room)
+- [ ] Global: role secretary (right to print timetables and attendance sheets)
+- [x] Global: add bookingstarttime (teachers can set room and attendance before that time)
 - [x] Global: print timetable isn't styled
 - [ ] Global: export timetable as pdf
+- [ ] Global: email timetable to user,teacher/notification of event/...?
 - [ ] Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
-- [ ] Global: add slots to added teacher, when event is active
 - [ ] Global: add eventId to room db for handle different events
 - [ ] Global: deleting slot needs confirmation
+- [ ] Global: add install routine
 - [ ] Global: update bootstrap and the libs
 - [ ] Global: log more action like change pwd, presence, ...
+
 - [ ] Admin: room configuration (add, rename, delete, (un)set to teacher)
 - [ ] Admin: unset rooms from all teacher (for new event)
 - [x] Admin: import rooms
 - [ ] Admin: modify action_csvPreview for room import
 - [ ] Admin: use datetimepicker for bookingDate
 - [ ] Admin: detailed error msg
+
+- [ ] Teacher: add checkbox "abwesend" to attendance form
 - [ ] Teacher: set user to slot (if a speech needs more time)?
 - [ ] Teacher: deleting booked slot needs confirmation
 - [x] Teacher: select room from a list of free rooms
+
 - [x] User: change passwort in profile
 - [ ] User: request double slot for intensive speech? (maybe before a pause?)
 - [ ] User: possibilty to add a text to a booked slot
 - [ ] User: show presence of all teachers on book.php (+only selected teachers)
+
+- [x] User/Teacher: ical download for booked slots?
