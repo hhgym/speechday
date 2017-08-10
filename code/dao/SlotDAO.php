@@ -123,7 +123,7 @@ class SlotDAO extends AbstractDAO {
 
         while ($s = self::fetchObject($res)) {
             $class = $s->role != 'student' ? ' (Lehrer)' : ' (' . $s->class . ')';
-            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'studentName' => $s->firstName . ' ' . $s->lastName . $class);
+            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'studentName' => $s->firstName . ' ' . $s->lastName, 'studentClass' => $class);
         }
         self::close($res);
         return $slots;

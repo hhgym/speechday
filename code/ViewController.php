@@ -361,7 +361,7 @@ class ViewController extends Controller {
                     <?php else: ?>
                         <tr class='<?php echo($teacherAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                             <td><?php echo($timeTd) ?></td>
-                            <td><?php echo($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName']) ?></td>
+                            <td><?php echo($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName'] . ' ' . $bookedSlots[$fromDate]['studentClass']) ?></td>
                         </tr>
                     <?php endif; ?>
                 <?php endif; ?>
