@@ -690,7 +690,7 @@ class Controller {
         $activeEvent = EventDAO::getActiveEvent();
         
         header('Content-type: text/calendar; charset=utf-8');
-        header('Content-Disposition: attachment; filename=invite.ics');
+        header('Content-Disposition: attachment; filename=event.ics');
         
         $eventName = $activeEvent->getName();
         
@@ -712,8 +712,17 @@ class Controller {
                 $room = RoomDAO::getRoomForTeacherId($user->getId());
             }
             
-            $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
-            $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
+            // $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
+            // $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
+            
+            $timezone = new DateTimeZone('Europe/Berlin');
+            $dateFromObject = DateTime::createFromFormat('U', $slot['dateFrom'], $timezone);
+            $dateFromObject->setTimezone($timezone);
+            $dateToObject = DateTime::createFromFormat('U', $slot['dateTo'], $timezone);
+            $dateToObject->setTimezone($timezone);
+
+            $dateFrom =  $dateFromObject->format(DateTime::ATOM);
+            $dateTo = $dateToObject->format(DateTime::ATOM);
 
             if ($room != null) {
                 $roomString = '\r\nRaum: ' . $room->getRoomNumber() . ' - ' . $room->getRoomName();
