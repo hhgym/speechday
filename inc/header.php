@@ -4,6 +4,9 @@ require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 require_once('code/AuthenticationManager.php');
 
+require_once('code/Iconfig/Config.php');
+$config = new Iconfig\Config('config');
+
 SessionContext::create();
 
 if (!isset($_SESSION['userId'])) {

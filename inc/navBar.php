@@ -8,7 +8,7 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' href='home.php'>Eltern Sprechtags Verwaltung</a>
+            <a class='navbar-brand' href='home.php'><?php echo($config->getConfig('title'));?></a>
         </div>
         <div id='navbar' class='navbar-collapse collapse'>
 
@@ -20,6 +20,7 @@
                 <?php } ?>
                 <?php if ($user->getRole() === 'admin') { ?>
                     <li id='navTabAdmin'><a href='admin.php'>Administration</a></li>
+                    <li id='navTabConfig'><a href='configure.php'>Konfiguration</a></li>
                 <?php } ?>
             </ul>
 
