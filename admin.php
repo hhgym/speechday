@@ -9,12 +9,13 @@ include_once 'inc/header.php';
 <script type='text/javascript' src='js/admin.js'></script>
 <script type='text/javascript' src='js/validation.min.js'></script>
 
-<link href='libs/bootstrap/css/bootstrap-datepicker3.min.css' rel='stylesheet'>
-<link href='libs/bootstrap/css/bootstrap-datetimepicker.css' rel='stylesheet'>
-<script src='libs/bootstrap/js/bootstrap-datepicker.min.js'></script>
-<script src='libs/bootstrap/locales/bootstrap-datepicker.de.min.js'></script>
-<script type="text/javascript" src="libs/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-<script type="text/javascript" src="libs/bootstrap/js/bootstrap-datetimepicker.de.js" charset="UTF-8"></script>
+<!--<link href='libs/bootstrap/css/bootstrap-datepicker3.min.css' rel='stylesheet'>-->
+<link href='libs/bootstrap/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>
+
+<script type="text/javascript" src='libs/bootstrap/js/moment-with-locales.js'></script>
+<!--<script type="text/javascript" src='libs/bootstrap/js/bootstrap-datepicker.min.js'></script>-->
+<script type="text/javascript" src="libs/bootstrap/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+
 
 <p id='pageName' hidden>Admin</p>
 
@@ -50,6 +51,17 @@ include_once 'inc/header.php';
                         </div>
 
                         <script>
+                            $('#datePicker').datetimepicker({
+                                allowInputToggle: true,
+                                sideBySide: false,
+                                // useCurrent: true,
+                                format: 'DD.MM.YYYY',
+                                locale: 'de',
+                                daysOfWeekDisabled: [0,6],
+                            });
+                        </script>  
+                        
+                <!--        <script>
                             $('#datePicker').datepicker({
                                 container: '#datePicker',
                                 startDate: '0d',
@@ -62,19 +74,45 @@ include_once 'inc/header.php';
                                 todayHighlight: true
                             });
                         </script>
-
+                -->        
                         <div class='form-group'>
-                            <label for='inputStartTime'>Beginn</label>
-                            <input type='text' class='form-control' id='inputStartTime' name='beginTime'
-                                   placeholder='16:00'>
+                        <label for='inputStartTime'>Beginn</label>
+                            <div class='input-group input-append date' id='datePickerBeginTime'>
+                                <input type='text' class='form-control' id='inputStartTime' name='beginTime' placeholder='16:00'>
+                                <span class='input-group-addon'><i class='glyphicon glyphicon-time'></i></span>
+                            </div>
                         </div>
+                        
+                        <script>
+                        var dateNow = new Date();
+                            $('#datePickerBeginTime').datetimepicker({
+                                allowInputToggle: true,
+                                defaultDate:moment(dateNow).hours(16).minutes(0).seconds(0).milliseconds(0),
+                                format: 'HH:mm',
+                                locale: 'de',
+                                stepping: 5
+                            });
+                        </script> 
+                        
 
                         <div class='form-group'>
                             <label for='inputEndTime'>Ende</label>
-                            <input type='text' class='form-control' id='inputEndTime' name='endTime'
-                                   placeholder='20:00'>
+                            <div class='input-group input-append date' id='datePickerEndTime'>
+                                <input type='text' class='form-control' id='inputEndTime' name='endTime' placeholder='20:00'>
+                                <span class='input-group-addon'><i class='glyphicon glyphicon-time'></i></span>
+                            </div>
                         </div>
 
+                        <script>
+                        var dateNow = new Date();
+                            $('#datePickerEndTime').datetimepicker({
+                                allowInputToggle: true,
+                                defaultDate:moment(dateNow).hours(20).minutes(0).seconds(0).milliseconds(0),
+                                format: 'HH:mm',
+                                locale: 'de',
+                            });
+                        </script> 
+                        
                         <div class='form-group'>
                             <label for='inputSlotDuration'>Dauer einer Einheit</label>
                             <select class='form-control' id='inputSlotDuration' name='slotDuration'>
@@ -100,23 +138,19 @@ include_once 'inc/header.php';
                             <label for='inputDate'>Buchungsanfang (optional, Standard: jetzt)</label>
                             <div class='input-group input-append date' id='datePickerBookingStart'>
                                 <input type='text' class='form-control' id='bookingDateStart' name='bookingDateStart'>
-                                <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
+                                <span class='input-group-addon'><i class='glyphicons glyphicons-calendar'></i></span>
                             </div>
                         </div>
                         
                         <script>
-                            $('#datePickerBookingStart').datepicker({
-                                container: '#datePicker',
-                                startDate: '0d',
-                                autoclose: true,
-                                format: 'dd.mm.yyyy',
-                                language: 'de',
-                                daysOfWeekDisabled: '0,6',
-                                daysOfWeekHighlighted: '1,2,3,4,5',
-                                calendarWeeks: true,
-                                todayHighlight: true
+                            $('#datePickerBookingStart').datetimepicker({
+                                allowInputToggle: true,
+                                sideBySide: false,
+                                useCurrent: true,
+                                format: 'DD.MM.YYYY HH:mm',
+                                locale: 'de',
                             });
-                        </script>                        
+                        </script>                       
                         
                         <div class='form-group'>
                             <label for='inputDate'>Buchungsende (optional, Standard: Datum 0:00 Uhr)</label>
@@ -125,20 +159,16 @@ include_once 'inc/header.php';
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
-<script>
+                        
+                        <script>
                             $('#datePickerBookingEnd').datetimepicker({
-                                format: 'dd.mm.yyyy hh:ii',
-                                language: 'de',
-});</script>
-
-                      <!--  <script>
-                            $('#datePickerBooking').datetimepicker({
-    format: 'dd.mm.yyy hh:ii',
-    defaultDate: new Date('2015-09-01 10:00'),
-    disabledDates: [
-    moment("2015-12-25 10:00")]
+                                allowInputToggle: true,
+                                sideBySide: false,
+                                useCurrent: true,
+                                format: 'DD.MM.YYYY HH:mm',
+                                locale: 'de',
                             });
-                        </script> -->
+                        </script>
                         
                         <div class='form-group'>
                             <label><input type='checkbox' name='setActive[]'> als aktiven Elternsrpechtag setzen</label>
