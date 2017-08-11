@@ -54,14 +54,14 @@ include_once 'inc/header.php';
                             $('#datePicker').datetimepicker({
                                 allowInputToggle: true,
                                 sideBySide: false,
-                                // useCurrent: true,
+                                useCurrent: false,
                                 format: 'DD.MM.YYYY',
                                 locale: 'de',
                                 daysOfWeekDisabled: [0,6],
                             });
                         </script>  
-                        
-                <!--        <script>
+                    <!--    
+                        <script>
                             $('#datePicker').datepicker({
                                 container: '#datePicker',
                                 startDate: '0d',
@@ -138,7 +138,7 @@ include_once 'inc/header.php';
                             <label for='inputDate'>Buchungsanfang (optional, Standard: jetzt)</label>
                             <div class='input-group input-append date' id='datePickerBookingStart'>
                                 <input type='text' class='form-control' id='bookingDateStart' name='bookingDateStart'>
-                                <span class='input-group-addon'><i class='glyphicons glyphicons-calendar'></i></span>
+                                <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
                         
@@ -146,7 +146,7 @@ include_once 'inc/header.php';
                             $('#datePickerBookingStart').datetimepicker({
                                 allowInputToggle: true,
                                 sideBySide: false,
-                                useCurrent: true,
+                                useCurrent: false,
                                 format: 'DD.MM.YYYY HH:mm',
                                 locale: 'de',
                             });
@@ -164,7 +164,7 @@ include_once 'inc/header.php';
                             $('#datePickerBookingEnd').datetimepicker({
                                 allowInputToggle: true,
                                 sideBySide: false,
-                                useCurrent: true,
+                                useCurrent: false,
                                 format: 'DD.MM.YYYY HH:mm',
                                 locale: 'de',
                             });
