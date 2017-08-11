@@ -45,16 +45,18 @@ As a student / parent:
 - [ ] Global: add eventId to room db for handle different events
 - [ ] Global: deleting slot needs confirmation
 - [ ] Global: add install routine
-- [ ] Global: update bootstrap and the libs
+- [ ] Global: update bootstrap
+- [ ] Global: update jquery
 - [ ] Global: log more action like change pwd, presence, ...
 
 - [ ] Admin: room configuration (add, rename, delete, (un)set to teacher)
 - [ ] Admin: unset rooms from all teacher (for new event)
 - [x] Admin: import rooms
 - [ ] Admin: modify action_csvPreview for room import
-- [ ] Admin: use datetimepicker for bookingDate
+- [x] Admin: use datetimepicker for bookingDate
 - [ ] Admin: detailed error msg
 - [ ] Admin: edit event (like bookingdates, ...)
+- [ ] Admin: user create/edit: use freeRoomOptions()
 
 - [x] Teacher: add checkbox "abwesend" to attendance form
 - [ ] Teacher: set user to slot (if a speech needs more time)?
