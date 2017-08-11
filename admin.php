@@ -39,13 +39,14 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputName'>Name</label>
                             <input type='text' class='form-control' id='inputName' name='name'
-                                   placeholder='Tragen Sie hier den Namen des Elternsrpechtags ein'>
+                                   placeholder='Tragen Sie hier den Namen des Elternsprechtags ein'>
                         </div>
 
                         <div class='form-group'>
                             <label for='inputDate'>Datum</label>
                             <div class='input-group input-append date' id='datePicker'>
-                                <input type='text' class='form-control' id='inputDate' name='date'>
+                                <input type='text' class='form-control' id='inputDate' name='date'
+                                placeholder='Tragen Sie hier das Datum des Elternsprechtags ein'>
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
@@ -55,9 +56,14 @@ include_once 'inc/header.php';
                                 allowInputToggle: true,
                                 sideBySide: false,
                                 useCurrent: false,
+                                calendarWeeks: true,
+                                showClear: false,
+                                showClose: false,
+                                widgetPositioning: {horizontal: 'left', vertical: 'bottom'},
                                 format: 'DD.MM.YYYY',
                                 locale: 'de',
                                 daysOfWeekDisabled: [0,6],
+                                
                             });
                         </script>  
                     <!--    
@@ -88,6 +94,7 @@ include_once 'inc/header.php';
                             $('#datePickerBeginTime').datetimepicker({
                                 allowInputToggle: true,
                                 defaultDate:moment(dateNow).hours(16).minutes(0).seconds(0).milliseconds(0),
+                                widgetPositioning: {horizontal: 'left', vertical: 'bottom'},
                                 format: 'HH:mm',
                                 locale: 'de',
                                 stepping: 5
@@ -108,6 +115,7 @@ include_once 'inc/header.php';
                             $('#datePickerEndTime').datetimepicker({
                                 allowInputToggle: true,
                                 defaultDate:moment(dateNow).hours(20).minutes(0).seconds(0).milliseconds(0),
+                                widgetPositioning: {horizontal: 'left', vertical: 'bottom'},
                                 format: 'HH:mm',
                                 locale: 'de',
                                 stepping: 5
@@ -138,7 +146,8 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputDate'>Buchungsanfang (optional, Standard: jetzt)</label>
                             <div class='input-group input-append date' id='datePickerBookingStart'>
-                                <input type='text' class='form-control' id='bookingDateStart' name='bookingDateStart'>
+                                <input type='text' class='form-control' id='bookingDateStart' name='bookingDateStart'
+                                placeholder='Hier können Sie hier den Beginn der Buchung eintragen. (dd.mm.yyy HH:MM)'>
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
@@ -148,6 +157,11 @@ include_once 'inc/header.php';
                                 allowInputToggle: true,
                                 sideBySide: false,
                                 useCurrent: false,
+                                calendarWeeks: true,
+                                showTodayButton: true,
+                                showClear: true,
+                                showClose: false,
+                                widgetPositioning: {horizontal: 'left', vertical: 'bottom'},
                                 format: 'DD.MM.YYYY HH:mm',
                                 locale: 'de',
                             });
@@ -156,7 +170,8 @@ include_once 'inc/header.php';
                         <div class='form-group'>
                             <label for='inputDate'>Buchungsende (optional, Standard: Datum 0:00 Uhr)</label>
                             <div class='input-group input-append date' id='datePickerBookingEnd'>
-                                <input type='text' class='form-control' id='bookingDateEnd' name='bookingDateEnd'>
+                                <input type='text' class='form-control' id='bookingDateEnd' name='bookingDateEnd'
+                                placeholder='Hier können Sie hier das Ende der Buchung eintragen. (dd.mm.yyy HH:MM)'>
                                 <span class='input-group-addon'><i class='glyphicon glyphicon-calendar'></i></span>
                             </div>
                         </div>
@@ -166,6 +181,10 @@ include_once 'inc/header.php';
                                 allowInputToggle: true,
                                 sideBySide: false,
                                 useCurrent: false,
+                                calendarWeeks: true,
+                                showClear: true,
+                                showClose: false,
+                                widgetPositioning: {horizontal: 'left', vertical: 'bottom'},
                                 format: 'DD.MM.YYYY HH:mm',
                                 locale: 'de',
                             });
