@@ -35,7 +35,7 @@ include_once 'inc/header.php';
             <?php elseif ($activeEvent->getStartPostDate() > time()): ?>
                 <h3>Buchungen sind noch nicht möglich!</h3>
                 <br>
-                Buchungen für den <?php echo($activeEvent->getName()); ?> am <?php echo(toDate($activeEvent->getDateFrom(),'d.m.Y')); ?> sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?>Uhr  bis <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
+                Buchungen für den <?php echo($activeEvent->getName()); ?> am <?php echo(toDate($activeEvent->getDateFrom(),'d.m.Y')); ?> sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?> Uhr  bis <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
            <?php endif; ?>
             
         <?php else: ?>

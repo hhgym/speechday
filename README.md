@@ -54,6 +54,7 @@ As a student / parent:
 - [ ] Admin: modify action_csvPreview for room import
 - [ ] Admin: use datetimepicker for bookingDate
 - [ ] Admin: detailed error msg
+- [ ] Admin: edit event (like bookingdates, ...)
 
 - [x] Teacher: add checkbox "abwesend" to attendance form
 - [ ] Teacher: set user to slot (if a speech needs more time)?
