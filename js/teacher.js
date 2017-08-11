@@ -1,6 +1,7 @@
 $(document).ready(function () {
     loadTimeTable(1);
     loadSlots();
+    loadRoom();
     
     $('#selectType').change(function () {
         var typeSelect = $('#selectType').find('option:selected');
@@ -14,6 +15,17 @@ $(document).on('click', '#btn-change-attendance', function () {
     $('#changeAttendanceForm').submit(function (e) {
         e.preventDefault();
         $('#changeAttendanceForm').unbind('submit');
+        
+        
+        if (document.getElementById('inputAbsent').checked) {
+            if (!confirm('WARNUNG!\n\nDies löscht alle eventuell gebuchten Einheiten und den gesetzten Raum!')) {
+                return;
+            }
+        } else {
+            if (!confirm('WARNUNG!\n\nDies löscht eventuell gebuchten Einheiten!')) {
+                return;
+            }
+        }
         
         var postData = $(this).serializeArray();
         postData = postData.concat({name: 'action', value: 'changeAttendance'});
@@ -30,6 +42,7 @@ $(document).on('click', '#btn-change-attendance', function () {
 
                     showMessage(message, 'success', 'Die Anwesenheit wurde erfolgreich geändert!');
                     loadSlots();
+                    loadRoom();
                 } else {
                     showMessage(message, 'danger', 'Die Anwesenheit konnte nicht geändert werden!');
                 }
@@ -107,6 +120,21 @@ function loadSlots() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             SlotsTablePauses.html('<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>');
+        }
+    });
+}
+
+function loadRoom() {
+    var RoomEditForm = $('#RoomEditForm');
+    $.ajax({
+        url: 'viewController.php?action=getRoomEdit',
+        dataType: 'html',
+        type: 'GET',
+        success: function (data, textStatus, jqXHR) {
+            RoomEditForm.html(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            RoomEditForm.html('<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>');
         }
     });
 }

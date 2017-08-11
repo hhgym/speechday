@@ -55,11 +55,12 @@ As a student / parent:
 - [ ] Admin: use datetimepicker for bookingDate
 - [ ] Admin: detailed error msg
 
-- [ ] Teacher: add checkbox "abwesend" to attendance form
+- [x] Teacher: add checkbox "abwesend" to attendance form
 - [ ] Teacher: set user to slot (if a speech needs more time)?
 - [ ] Teacher: deleting booked slot needs confirmation
 - [x] Teacher: select room from a list of free rooms
 
+- [ ] User: email if a teacher set absent to true and a slot is booked
 - [x] User: change passwort in profile
 - [ ] User: request double slot for intensive speech? (maybe before a pause?)
 - [ ] User: possibilty to add a text to a booked slot

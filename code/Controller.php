@@ -89,6 +89,13 @@ class Controller {
 
         SlotDAO::changeAttendanceForUser($userId, $eventId, $fromTime, $toTime);
 
+        if (isset($_REQUEST['absent'])) {
+           UserDAO::updateAbsent($userId, true);
+           RoomDAO::updateRoomForTeacher('', $userId, $eventId, true);
+        } else {
+            UserDAO::updateAbsent($userId, false);
+        }
+        
         echo 'success';
     }
 
@@ -516,7 +523,7 @@ class Controller {
             $updateRoomResult = RoomDAO::update($roomNumber, $roomName, $userId)['success'];
         }
         if (isset($_REQUEST['absent'])) {
-           UserDAO::updateAbsent($userId,true);
+           UserDAO::updateAbsent($userId, true);
         }
 
         if ($updateUserResult && $updateRoomResult) {

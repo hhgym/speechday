@@ -9,9 +9,9 @@ class UserDAO extends AbstractDAO {
     public static function getUserForId($userId) {
         $user = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, class, role, title FROM user WHERE id = ?;', array($userId));
+        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, class, role, title, absent FROM user WHERE id = ?;', array($userId));
         if ($u = self::fetchObject($res)) {
-            $user = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->class, $u->role, $u->title);
+            $user = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->class, $u->role, $u->title, $u->absent);
         }
         self::close($res);
         return $user;
@@ -20,10 +20,10 @@ class UserDAO extends AbstractDAO {
     public static function getUserForUserName($userName) {
         $user = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, class, role, title  FROM user WHERE userName = ?;', array($userName));
+        $res = self::query($con, 'SELECT id, userName, passwordHash, firstName, lastName, class, role, title, absent FROM user WHERE userName = ?;', array($userName));
 
         if ($u = self::fetchObject($res)) {
-            $user = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->class, $u->role, $u->title);
+            $user = new User($u->id, $u->userName, $u->passwordHash, $u->firstName, $u->lastName, $u->class, $u->role, $u->title, $u->absent);
         }
         self::close($res);
         return $user;
@@ -239,12 +239,27 @@ class UserDAO extends AbstractDAO {
         */
     }
 
-    public static function updateAbsent($userId,$absent) {
+    public static function updateAbsent($userId, $absent) {
         $con = self::getConnection();
         $query = 'UPDATE user SET absent = ? WHERE Id = ?;';
         $params = array($absent, $userId);
         $result = self::query($con, $query, $params, true)['success'];
         return $result;
+    }
+    
+    public static function isAbsent($userId) {
+        $con = self::getConnection();
+        
+        $res = self::query($con, 'SELECT absent FROM user WHERE id = ?;', array($userId));
+        if ($u = self::fetchObject($res)) {
+            if ($u->absent == '1') {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return null;
+        }
     }
 
     public static function deleteUsersByRole($role) {

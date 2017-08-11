@@ -133,11 +133,59 @@ class ViewController extends Controller {
         <?php
     }
 
+    public function action_getRoomEdit() {
+        
+        $user = AuthenticationManager::getAuthenticatedUser();
+        $teacher = UserDAO::getUserForId($user->getId());
+        $event = EventDAO::getActiveEvent();
+        $isAbsent = UserDAO::isAbsent($user->getId());
+        
+        $AbsentWarning = '<h3>Du bist abwesend!</h3>';
+        if ($isAbsent) {
+            echo($AbsentWarning);
+            return;
+        }
+        
+        ?>
+        <h4>
+            Aktueller Raum
+        </h4>
+        <p id='room'>
+            <?php
+            // $event = EventDAO::getActiveEvent();
+            // $viewController = ViewController::getInstance();
+            // $viewController->action_room();
+            self::action_room();
+            ?>
+        </p>
+        
+        <h4>
+            Raum ändern
+        </h4>
+        <form id='changeRoomForm'>
+            <div class='form-group'>
+               <label for='selectRoom'>Verfügbare Räume</label>
+                <input type='hidden' name='userId' value='<?php echo(escape($user->getId())) ?>'>
+                <input type='hidden' name='eventId' value='<?php echo(escape($event->getId())) ?>'>
+                <select class='form-control' id='SelectRoomId' name='roomId'>
+                    <?php echo(getRoomOptions()); ?>
+                </select>
+            </div>
+            
+            <button type='submit' class='btn btn-primary' id='btn-change-room'>
+                Raum ändern
+            </button>
+        </form>
+        <?php
+        
+    }
+    
     public function action_getPausesSlots() {
         // $teacher = UserDAO::getUserForId($_REQUEST['teacherId']);
         $user = AuthenticationManager::getAuthenticatedUser();
         $teacher = UserDAO::getUserForId($user->getId());
         $activeEvent = EventDAO::getActiveEvent();
+        $isAbsent = UserDAO::isAbsent($user->getId());
 
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($teacher == null || $user == null || $activeEvent == null) {
@@ -145,6 +193,12 @@ class ViewController extends Controller {
             return;
         }
 
+        $AbsentWarning = '<h3>Du bist abwesend!</h3>';
+        if ($isAbsent) {
+            echo($AbsentWarning);
+            return;
+        }
+        
         $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
         $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
         $canBook = !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlots);
@@ -711,15 +765,17 @@ class ViewController extends Controller {
         $attendance = null;
         $salutation = 'Du bist am ';
 
+        $isAbsent = UserDAO::isAbsent($user->getId());
+        
         if ($user != null) {
-            $attendance = SlotDAO::getAttendanceForUser($user->getId(), $event);
+            $attendance = SlotDAO::getAttendanceForUser($user->getId(), $event);                
             if ($named) {
                 $salutation = $user->getFirstName() . ' ' . $user->getLastName() . ' ist am ';
             }
         }
 
         if ($attendance != null) {
-            if ($attendance['to'] - $attendance['from'] == 0) {
+            if (($attendance['to'] - $attendance['from'] == 0) || $isAbsent) {
                 $output = escape($salutation . date('d.m.Y', $attendance['date']) . ' nicht anwesend.');
             } else {
                 $output = escape($salutation . date('d.m.Y', $attendance['date']) . ' von ' . date('H:i', $attendance['from']) . ' bis ' . date('H:i', $attendance['to']) . ' anwesend.');
