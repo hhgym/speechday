@@ -110,6 +110,7 @@ include_once 'inc/header.php';
                                 defaultDate:moment(dateNow).hours(20).minutes(0).seconds(0).milliseconds(0),
                                 format: 'HH:mm',
                                 locale: 'de',
+                                stepping: 5
                             });
                         </script> 
                         
