@@ -5,6 +5,7 @@ return array(
         'database'  => '',
         'username'  => '',
         'password'  => '',
+        'prefix'    => ''
     ),
     'title' => 'Eltern Sprechtags Verwaltung',
     'title abbreviation' => 'ESV',
@@ -20,4 +21,7 @@ return array(
         'faxnumber' => '',
         'url' => '',
     ),
+    'uploaddirectory' => '',
+    'version' => '1.0.0',
+    'installed' => false,
 );

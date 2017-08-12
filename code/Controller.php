@@ -6,6 +6,7 @@ require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
 require_once('SimpleICS.php');
+require_once('code/Iconfig/Config.php');
 
 class Controller {
     // request wide singleton
@@ -750,5 +751,31 @@ class Controller {
         echo $cal->serialize();
         
     }
+    
+    protected function action_changeConfig() {
+        
+        $config = new Iconfig\Config('config');
+        
+        // $schoolName = $_REQUEST['schoolName'];
+        // $config->setConfig(['school']['name'], $schoolName);
+        
+        $title = $_REQUEST['title'];
+        $config->setConfig('title', $title);
+        
+        
+        $all = Config::getAll();
+        echo(var_dump($all)); // full configuration array will be returned
+        
+        // $filename = 'test.php';
+        
+        // $export = "<?php return ";
+        // $export .= var_export($config->getConfig(), true);
+        // $export .= ";";
+        
+        file_put_contents(dirname(__DIR__).'/config/config.php', "<?php return " . var_export($config->getConfig(), true) . ";" );
+        
+        echo 'success';
+        
+    }  
     
 }
