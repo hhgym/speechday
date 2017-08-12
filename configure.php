@@ -17,14 +17,7 @@ include_once 'inc/header.php';
 
     <h1>Konfiguration</h1>
 
-    <?php;
-        $val['schoolName'] = $config->getConfig('school')['name'];
-        $val = json_encode($val);
-    ?>
-    
         <form id='changeConfigForm'>
-
-            <input type='hidden' id='inputConfig' name='config' value="<?php $config ?>">
 
             <div class='form-group'>
                 <label for='inputUserName'>Schulname</label>
@@ -57,6 +50,11 @@ include_once 'inc/header.php';
             <div class='form-group'>
                 <label for='inputTitle'>Title</label>
                 <input type='text' class='form-control' id='inputTitle' name='title' placeholder='' value="<?php echo(escape($config->getConfig('title'))); ?>" >
+            </div>
+            
+            <div class='form-group'>
+                <label for='inputTitle'>Title Abkürzung</label>
+                <input type='text' class='form-control' id='inputTitleAbbreviation' name='titleAbbreviation' placeholder='' value="<?php echo(escape($config->getConfig('titleAbbreviation'))); ?>" >
             </div>
             
             <button type='submit' class='btn btn-primary' id='btn-edit-config'>Speichern</button>

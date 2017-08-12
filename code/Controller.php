@@ -756,22 +756,19 @@ class Controller {
         
         $config = new Iconfig\Config('config');
         
-        // $schoolName = $_REQUEST['schoolName'];
-        // $config->setConfig(['school']['name'], $schoolName);
+        echo(var_export($_REQUEST));
         
-        $title = $_REQUEST['title'];
-        $config->setConfig('title', $title);
-        
-        
-        $all = Config::getAll();
-        echo(var_dump($all)); // full configuration array will be returned
-        
-        // $filename = 'test.php';
-        
-        // $export = "<?php return ";
-        // $export .= var_export($config->getConfig(), true);
-        // $export .= ";";
-        
+        $config->setConfig('school.name', $_REQUEST['schoolName']);
+        $config->setConfig('school.adress.street', $_REQUEST['schoolStreet']);
+        $config->setConfig('school.adress.postcode', $_REQUEST['schoolPostcode']);
+        $config->setConfig('school.adress.state', $_REQUEST['schoolState']);
+        $config->setConfig('school.adress.land', $_REQUEST['schoolLand']);
+        $config->setConfig('school.phonenumber', $_REQUEST['schoolPhonenumber']);
+        $config->setConfig('school.faxnumber', $_REQUEST['schoolFaxnumber']);
+        $config->setConfig('school.url', $_REQUEST['schoolUrl']);
+    
+        $config->setConfig('title', $_REQUEST['title']);
+        $config->setConfig('titleAbbreviation', $_REQUEST['titleAbbreviation']);
         file_put_contents(dirname(__DIR__).'/config/config.php', "<?php return " . var_export($config->getConfig(), true) . ";" );
         
         echo 'success';
