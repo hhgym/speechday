@@ -708,6 +708,10 @@ class Controller {
             $slots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $user->getId());
         }
         
+        $config = new Iconfig\Config('config');
+        $adress = $config->getConfig('school.name') . ', ' . $config->getConfig('school.adress.street') . ', ' . $config->getConfig('school.adress.postcode') . ' ' . $config->getConfig('school.adress.state');
+        $url = $config->getConfig('school.url');
+        
         $cal = new SimpleICS();
         
         foreach ($slots as $slot) {
@@ -738,11 +742,11 @@ class Controller {
                 $roomString = '';
             }
             
-            $cal->addEvent(function($e) use ($dateFrom, $dateTo, $meetingPersonName, $eventName, $roomString) {
+            $cal->addEvent(function($e) use ($dateFrom, $dateTo, $meetingPersonName, $eventName, $roomString, $adress, $url) {
                 $e->startDate = new DateTime($dateFrom);
                 $e->endDate = new DateTime($dateTo);
-                $e->uri = 'https://www.hhgym.de';
-                $e->location = 'Heinrich-Hertz-Gymnasium, Rigaer Straße 81-82, 10247 Berlin';
+                $e->uri = $url;
+                $e->location = $adress;
                 $e->description = $meetingPersonName . $roomString;
                 $e->summary = $eventName;
             });
@@ -756,7 +760,7 @@ class Controller {
         
         $config = new Iconfig\Config('config');
         
-        echo(var_export($_REQUEST));
+        // echo(var_export($_REQUEST));
         
         $config->setConfig('school.name', $_REQUEST['schoolName']);
         $config->setConfig('school.adress.street', $_REQUEST['schoolStreet']);
