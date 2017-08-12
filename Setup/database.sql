@@ -37,14 +37,15 @@ CREATE TABLE `accessdata` (
 -- Tabellenstruktur für Tabelle `event`
 --
 CREATE TABLE `event` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin NOT NULL,
   `dateFrom` int(11) NOT NULL,
   `dateTo` int(11) NOT NULL,
   `slotTimeMin` int(11) NOT NULL DEFAULT '5',
   `breakFrequency` int(11) NOT NULL DEFAULT '0',
   `isActive` int(11) NOT NULL DEFAULT '0',
-  `finalPostDate` int(11)
+  `startPostDate` int(11) DEFAULT NULL,
+  `finalPostDate` int(11) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -53,7 +54,7 @@ CREATE TABLE `event` (
 CREATE TABLE `log` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `action` int(11) NOT NULL COMMENT '1 = logIn, 2 = logOut, 3 = bookSlot, 4 = deleteSlot',
+  `action` int(11) NOT NULL COMMENT '1 = logIn, 2 = logOut, 3 = bookSlot, 4 = deleteSlot, 5 = change attendance, 6 = pause slot, 7 = change room',
   `info` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `date` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
