@@ -765,12 +765,14 @@ class Controller {
         $config->setConfig('school.name', $_REQUEST['schoolName']);
         $config->setConfig('school.adress.street', $_REQUEST['schoolStreet']);
         $config->setConfig('school.adress.postcode', $_REQUEST['schoolPostcode']);
+        $config->setConfig('school.adress.city', $_REQUEST['schoolCity']);
         $config->setConfig('school.adress.state', $_REQUEST['schoolState']);
         $config->setConfig('school.adress.land', $_REQUEST['schoolLand']);
         $config->setConfig('school.phonenumber', $_REQUEST['schoolPhonenumber']);
         $config->setConfig('school.faxnumber', $_REQUEST['schoolFaxnumber']);
         $config->setConfig('school.url', $_REQUEST['schoolUrl']);
-    
+        $config->setConfig('school.email', $_REQUEST['schoolEmail']);
+        
         $config->setConfig('title', $_REQUEST['title']);
         $config->setConfig('titleAbbreviation', $_REQUEST['titleAbbreviation']);
         file_put_contents(dirname(__DIR__).'/config/config.php', "<?php return " . var_export($config->getConfig(), true) . ";" );
