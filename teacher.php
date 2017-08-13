@@ -37,6 +37,7 @@ include_once 'inc/header.php';
                         </div>
                     </form>
 
+                    <input type='hidden' id='schoolUrl' value="<?php echo(escape($config->getConfig('school')['url'])); ?>" >
                     <button class="btn btn-primary" onclick="PrintElem('#timeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitplan ausdrucken
                     </button>

@@ -8,7 +8,7 @@ return array(
         'prefix'    => ''
     ),
     'title' => 'Eltern Sprechtags Verwaltung',
-    'title abbreviation' => 'ESV',
+    'titleAbbreviation' => 'ESV',
     'school' => array(
         'name' => '',
         'adress' => array(

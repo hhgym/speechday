@@ -16,7 +16,7 @@ include_once 'inc/header.php';
 <div class='container'>
 
     <h1>Konfiguration</h1>
-
+    
         <form id='changeConfigForm'>
 
             <div class='form-group'>
@@ -62,10 +62,6 @@ include_once 'inc/header.php';
             <div id='changeConfigFormMessage'></div>
             
         </form>
-    
-    
 
-    <?php print_r($config); ?>
-    
 <?php include_once 'inc/footer.php'; ?>
 
