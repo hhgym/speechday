@@ -47,6 +47,7 @@ As a student / parent:
 - [ ] Global: deleting slot needs confirmation
 - [ ] Global: add install routine
 - [ ] Global: update bootstrap
+- [ ] Global: check for correct use of the bootstrap css class'
 - [ ] Global: update jquery
 - [ ] Global: log more action like change pwd, presence, ...
 

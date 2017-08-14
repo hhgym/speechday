@@ -38,7 +38,7 @@ if (isset($_SESSION['userId']) != '') {
 
         <form class='form-signin' method='post' id='login-form'>
 
-            <h2 class='form-signin-heading'><?php echo($config->getConfig('title abbreviation'));?> Login</h2>
+            <h2 class='form-signin-heading'><?php echo(escape($config->getConfig('titleAbbreviation')));?> Login</h2>
             <hr/>
 
             <div id='error'>
