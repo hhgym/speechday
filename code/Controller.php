@@ -6,7 +6,7 @@ require_once('dao/SlotDAO.php');
 require_once('dao/LogDAO.php');
 require_once('dao/RoomDAO.php');
 require_once('SimpleICS.php');
-require_once('code/Iconfig/Config.php');
+require_once('dao/ConfigDAO.php');
 
 class Controller {
     // request wide singleton
@@ -758,7 +758,7 @@ class Controller {
     
     protected function action_changeConfig() {
         
-        $config = new Iconfig\Config('config');
+        $config = new Config('config');
         
         // echo(var_export($_REQUEST));
         
