@@ -80,8 +80,10 @@ $(document).on('click', '#btn-change-room', function (event) {
                     // });
                     
                     showMessage(message, 'success', 'Der Raum wurde erfolgreich geändert!');
-                } else if (data.indexOf('dirtyRead') > -1) {
-                    showMessage(message, 'warning', 'Bitte wähle einen Raum aus!');
+                } else if (data.indexOf('RoomIsBlocked') > -1) {
+                    showMessage(message, 'warning', 'Bitte wähle einen anderen Raum aus! Der Raum ist zwischenzeitlich bereits vergeben.');
+                } else if (data.indexOf('NoOrSameRoom') > -1) {
+                    showMessage(message, 'warning', 'Bitte wähle einen Raum aus!');    
                 } else {
                     showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
                 }

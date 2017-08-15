@@ -113,8 +113,15 @@ class Controller {
             $roomIdOld = '0';
         }
         
-        if ($roomId == '-1' || $roomId == $roomIdOld ) {
-            echo 'dirtyRead';
+        $freeRooms = RoomDAO::getAllFreeRooms();
+
+        if (!array_key_exists($roomId, $freeRooms) && $roomId != '0' && $roomId != '-1') {
+            echo 'RoomIsBlocked';
+            return;
+        }
+        
+        if ($roomId == '-1' || $roomId == $roomIdOld) {
+            echo 'NoOrSameRoom';
             return;
         }
         
