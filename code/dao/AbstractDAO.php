@@ -2,15 +2,24 @@
 
 require_once('Entities.php');
 
+require_once('ConfigDAO.php');
+
 abstract class AbstractDAO {
     protected static $connection;
-
+    
     protected static function getConnection() {
-		if (!isset(self::$connection)) {
-            $dbSettings = parse_ini_file("settings.ini");
-            $dsn = 'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'] . ';charset=utf8';
-            self::$connection = new PDO($dsn, $dbSettings["user"], $dbSettings["password"], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-		}
+        $config = new Config(dirname(dirname(__DIR__)) . '/config/');
+        
+        if($config->getConfig('database.extension') == 'pdo') {
+            if (!isset(self::$connection)) {
+            $dsn = 'mysql:host=' . $config->getConfig('database.host') . ';dbname=' . $config->getConfig('database.name') . ';charset=utf8';
+            self::$connection = new PDO($dsn, $config->getConfig('database.username'), $config->getConfig('database.password'), array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+            }
+        } elseif($config->getConfig('database.extension') == 'mysqli') {
+            self::$connection = new mysqli($config->getConfig('database.host'),$config->getConfig('database.username'),$config->getConfig('database.password'),$config->getConfig('database.name'));
+		} else {
+            return;
+        }
 		return self::$connection;
 	}
 
@@ -36,11 +45,23 @@ abstract class AbstractDAO {
 	}
 
     protected static function lastInsertId($connection) {
-		return $connection->lastInsertId();
+        
+        $config = new Config(dirname(dirname(__DIR__)) . '/config/');
+        if($config->getConfig('database.extension') == 'pdo') {
+            return $connection->lastInsertId();
+        } elseif($config->getConfig('database.extension') == 'mysqli') {
+            return $connection->insert_id;
+		}
 	}
 
     protected static function fetchObject($cursor) {
-		return $cursor->fetchObject();
+        
+        $config = new Config(dirname(dirname(__DIR__)) . '/config/');
+        if($config->getConfig('database.extension') == 'pdo') {
+            return $cursor->fetchObject();
+        } elseif($config->getConfig('database.extension') == 'mysqli') {
+            return $cursor->fetch_object();
+		}
 	}
 
     protected static function close($cursor) {

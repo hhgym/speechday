@@ -3,6 +3,9 @@
 require_once('code/Util.php');
 require_once('code/dao/AbstractDAO.php');
 
+require_once('code/dao/ConfigDAO.php');
+$config = new Config('config');
+
 SessionContext::create();
 
 if (isset($_SESSION['userId']) != '') {
@@ -35,7 +38,7 @@ if (isset($_SESSION['userId']) != '') {
 
         <form class='form-signin' method='post' id='login-form'>
 
-            <h2 class='form-signin-heading'>ESV Login</h2>
+            <h2 class='form-signin-heading'><?php echo(escape($config->getConfig('titleAbbreviation')));?> Login</h2>
             <hr/>
 
             <div id='error'>

@@ -42,10 +42,12 @@ As a student / parent:
 - [ ] Global: export timetable as pdf
 - [ ] Global: email timetable to user,teacher/notification of event/...?
 - [ ] Global: add config.php for some variable text (e.g. "Eltern Sprechtags Verwaltung")
+- [ ] Global: empty config.php var handle (for ics e.g.)
 - [ ] Global: add eventId to room db for handle different events
 - [ ] Global: deleting slot needs confirmation
 - [ ] Global: add install routine
 - [ ] Global: update bootstrap
+- [ ] Global: check for correct use of the bootstrap css class'
 - [ ] Global: update jquery
 - [ ] Global: log more action like change pwd, presence, ...
 
