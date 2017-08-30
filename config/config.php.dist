@@ -5,7 +5,8 @@ return array(
         'name'  => '',
         'username'  => '',
         'password'  => '',
-        'prefix'    => ''
+        'prefix'    => '',
+        'extension' => '[pdo|mysqli]'
     ),
     'title' => 'Eltern Sprechtags Verwaltung',
     'titleAbbreviation' => 'ESV',

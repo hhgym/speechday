@@ -696,10 +696,7 @@ class Controller {
         
         $user = AuthenticationManager::getAuthenticatedUser();
         $activeEvent = EventDAO::getActiveEvent();
-        
-        header('Content-type: text/calendar; charset=utf-8');
-        header('Content-Disposition: attachment; filename=event.ics');
-        
+
         $eventName = $activeEvent->getName();
         
         if ($user->getRole() == 'student') {
@@ -708,51 +705,57 @@ class Controller {
             $slots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $user->getId());
         }
         
-        $config = new Iconfig\Config('config');
+        $config = new Config('config');
         $adress = $config->getConfig('school.name') . ', ' . $config->getConfig('school.adress.street') . ', ' . $config->getConfig('school.adress.postcode') . ' ' . $config->getConfig('school.adress.state');
         $url = $config->getConfig('school.url');
         
         $cal = new SimpleICS();
         
-        foreach ($slots as $slot) {
+        if(count($slots) > 0) {
             
-            if ($user->getRole() == 'student') {
-                $meetingPersonName = $slot['teacherName'];
-                $room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
-            } else {
-                $meetingPersonName = $slot['studentName'] . ' ' . $slot['studentClass'];
-                $room = RoomDAO::getRoomForTeacherId($user->getId());
-            }
-            
-            // $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
-            // $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
-            
-            $timezone = new DateTimeZone('Europe/Berlin');
-            $dateFromObject = DateTime::createFromFormat('U', $slot['dateFrom'], $timezone);
-            $dateFromObject->setTimezone($timezone);
-            $dateToObject = DateTime::createFromFormat('U', $slot['dateTo'], $timezone);
-            $dateToObject->setTimezone($timezone);
+            foreach ($slots as $slot) {
+                
+                if ($user->getRole() == 'student') {
+                    $meetingPersonName = $slot['teacherName'];
+                    $room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
+                } else {
+                    $meetingPersonName = $slot['studentName'] . ' ' . $slot['studentClass'];
+                    $room = RoomDAO::getRoomForTeacherId($user->getId());
+                }
+                
+                // $dateFrom = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateFrom']);
+                // $dateTo = strftime("%Y-%m-%dT%H:%M:%S",$slot['dateTo']);
+                
+                $timezone = new DateTimeZone('Europe/Berlin');
+                $dateFromObject = DateTime::createFromFormat('U', $slot['dateFrom'], $timezone);
+                $dateFromObject->setTimezone($timezone);
+                $dateToObject = DateTime::createFromFormat('U', $slot['dateTo'], $timezone);
+                $dateToObject->setTimezone($timezone);
 
-            $dateFrom =  $dateFromObject->format(DateTime::ATOM);
-            $dateTo = $dateToObject->format(DateTime::ATOM);
+                $dateFrom =  $dateFromObject->format(DateTime::ATOM);
+                $dateTo = $dateToObject->format(DateTime::ATOM);
 
-            if ($room != null) {
-                $roomString = '\r\nRaum: ' . $room->getRoomNumber() . ' - ' . $room->getRoomName();
-            } else {
-                $roomString = '';
+                if ($room != null) {
+                    $roomString = '\r\nRaum: ' . $room->getRoomNumber() . ' - ' . $room->getRoomName();
+                } else {
+                    $roomString = '';
+                }
+                
+                $cal->addEvent(function($e) use ($dateFrom, $dateTo, $meetingPersonName, $eventName, $roomString, $adress, $url) {
+                    $e->startDate = new DateTime($dateFrom);
+                    $e->endDate = new DateTime($dateTo);
+                    $e->uri = $url;
+                    $e->location = $adress;
+                    $e->description = $meetingPersonName . $roomString;
+                    $e->summary = $eventName;
+                });
             }
-            
-            $cal->addEvent(function($e) use ($dateFrom, $dateTo, $meetingPersonName, $eventName, $roomString, $adress, $url) {
-                $e->startDate = new DateTime($dateFrom);
-                $e->endDate = new DateTime($dateTo);
-                $e->uri = $url;
-                $e->location = $adress;
-                $e->description = $meetingPersonName . $roomString;
-                $e->summary = $eventName;
-            });
+            header('Content-type: text/calendar; charset=utf-8');
+            header('Content-Disposition: attachment; filename=event.ics');
+            echo $cal->serialize();
+        } else {
+            header('Location: home.php');
         }
-        
-        echo $cal->serialize();
         
     }
     
