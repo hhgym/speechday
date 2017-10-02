@@ -79,6 +79,17 @@ function getTeacherOptions() {
     return $options;
 }
 
+function getStudentsOptions() {
+    $students = UserDAO::getUsersForRole('student');
+
+    $options = '<option value="-1">Bitte wähle einen Schüler aus ...</option>';
+    foreach ($students as $student) {
+        $options .= sprintf('<option value="%s">%s</option>', $student->getId(), '['.$student->getClass().'] '. $student->getFirstName() . ' ' . $student->getLastName());
+    }
+
+    return $options;
+}
+
 function getRoomOptions() {
     $rooms = RoomDAO::getAllFreeRooms();
     

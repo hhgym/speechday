@@ -81,9 +81,9 @@ class ViewController extends Controller {
     ?>
         <form id='chooseTeacherForm'>
             <div class='form-group'>
-                <label for='selectTeacher'>Schüler</label>
+                <label for='selectStudent'>Schüler</label>
                 <select class='form-control' id='selectStudent' name='student'>
-                    <?php echo(getTeacherOptions()); ?>
+                    <?php echo(getStudentsOptions()); ?>
                 </select>
             </div>
         </form> 
