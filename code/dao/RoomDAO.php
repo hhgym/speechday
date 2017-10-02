@@ -144,6 +144,15 @@ class RoomDAO extends AbstractDAO {
         
         return $result['success'];
     }
+    
+    public static function unsetAllRooms() {
+        
+        $con = self::getConnection();
+        
+        $result = self::query($con, 'UPDATE room SET teacherId = NULL WHERE teacherId IS NOT NULL;', array(), true);
+        
+        return $result['success'];
+    }
 
     public static function bulkInsertRooms($rooms) {
         $con = self::getConnection();

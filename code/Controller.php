@@ -100,6 +100,16 @@ class Controller {
         echo 'success';
     }
 
+    protected function action_deleteRoomAssignment() {
+        $success = RoomDAO::unsetAllRooms();
+        
+        if ($success) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+    
     protected function action_changeRoom() {
         $roomId = $_REQUEST['roomId'];
         $userId = $_REQUEST['userId'];

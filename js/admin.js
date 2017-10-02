@@ -2,7 +2,19 @@ $(document).ready(function () {
     loadChangeUserForm('createUser');
     displayActiveEvent();
     updateUploadInfos();
+    loadRoom()
 
+    
+    $('#selectTeacher').change(function () {
+        var teacherSelect = $('#selectTeacher');
+        teacherSelect.find("option[value='-1']").remove();
+
+        teacherSelect = teacherSelect.find('option:selected');
+        var teacherId = teacherSelect.val();
+
+        $('#room').load('viewController.php?action=room');
+    });
+    
     $(document).on('click', '#btn-create-event', function () {
         validateForm();
         var createEventForm = $('#createEventForm');
@@ -266,6 +278,84 @@ $(document).on('click', '#btn-delete-event', function (event) {
         changeEventForm.unbind('submit');
     });
 });
+
+
+$(document).on('click', '#btn-delete-room-assignment', function (event) {
+    var postData = $(this).serializeArray();
+    postData = postData.concat({name: 'action', value: 'deleteRoomAssignment'});
+    var formURL = 'controller.php';
+    
+    $.ajax({
+        url: formURL,
+        type: 'POST',
+        data: postData,
+        success: function (data, textStatus, jqXHR) {
+            var message = $('#message-room');
+            if (data.indexOf('success') > -1) {
+                showMessage(message, 'success', 'Alle Räume wurden zurückgesetzt!');
+            } else {
+                showMessage(message, 'danger', 'Die Räume konnten nicht zurückgesetzt werden!');
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showMessage(message, 'danger', 'Die Räume konnten nicht zurückgesetzt werden!');
+        }
+    });
+});
+
+function loadRoom() {
+    var RoomEditForm = $('#RoomEditForm');
+    $.ajax({
+        url: 'viewController.php?action=getRoomEdit',
+        dataType: 'html',
+        type: 'GET',
+        success: function (data, textStatus, jqXHR) {
+            RoomEditForm.html(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            RoomEditForm.html('<h3>Es ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>');
+        }
+    });
+}
+
+// $(document).on('click', '#btn-delete-room-assignment', function (event) {
+    // $('#changeRoomForm').submit(function (e) {
+        // e.preventDefault();
+        // $('#changeRoomForm').unbind('submit');
+        
+        // var postData = $(this).serializeArray();
+        // postData = postData.concat({name: 'action', value: 'deleteRoomAssignment'});
+
+        // var formURL = 'controller.php';
+        // $.ajax({
+            // url: formURL,
+            // type: 'POST',
+            // data: postData,
+            // success: function (data, textStatus, jqXHR) {
+                // var message = $('#message-room');
+                // if (data.indexOf('success') > -1) {
+                    // $('#room').load('viewController.php?action=room');
+                    // $('#SelectRoomId').load('viewController.php?action=getFreeRoomOptions');
+                    
+                    // showMessage(message, 'success', 'Der Raum wurde erfolgreich geändert!');
+                // } else if (data.indexOf('RoomIsBlocked') > -1) {
+                    // showMessage(message, 'warning', 'Bitte wähle einen anderen Raum aus! Der Raum ist zwischenzeitlich bereits vergeben.');
+                // } else if (data.indexOf('NoOrSameRoom') > -1) {
+                    // showMessage(message, 'warning', 'Bitte wähle einen Raum aus!');    
+                // } else {
+                    // showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
+                // }
+            // },
+            // error: function (jqXHR, textStatus, errorThrown) {
+                // showMessage(message, 'danger', 'Der Raum konnte nicht geändert werden!');
+            // }
+        // });
+    // });
+    // return true;
+// });
+
+
+
 
 function loadChangeEventsForm() {
     var changeEventForm = $('#changeEventForm');

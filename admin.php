@@ -304,6 +304,39 @@ include_once 'inc/header.php';
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='#accordion' href='#collapseRoomManagement'>
+                        Raumverwaltung
+                    </a>
+                </h4>
+            </div>
+            <div id='collapseRoomManagement' class='panel-collapse collapse'>
+                <div class='panel-body'>
+                    <div id="activeEventContainerRoom"></div>
+                    
+                    <button type='submit' class='btn btn-primary' id='btn-delete-room-assignment'>Räume zurücksetzen</button>
+                        
+                    <h4>Lehrer</h4>
+                    <form id='editRoomForm'>
+                        <div id='changeUserType'>
+                            <div class='form-group'>
+                                <label for='selectTeacher'>Lehrer / Lehrerin</label>
+                               <select class='form-control' id='selectTeacher' name='teacher'>
+                                   <?php echo(getTeacherOptions()); ?>
+                               </select>
+                                
+                                <div id='RoomEditForm'></div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class='message-room' id='message-room'></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse4'>
                         Benutzerverwaltung
                     </a>
