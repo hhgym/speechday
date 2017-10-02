@@ -14,10 +14,10 @@
 
             <ul class='nav navbar-nav'>
                 <li id='navTabHome'><a href='home.php'>Gebuchte Zeiten</a></li>
-                <?php if ($user->getRole() === 'teacher' or 'admin') { ?>
-                    <li id='navTabBook'><a href='book.php'>Zeiten setzen</a></li>
-                <?php } else { ?>
+                <?php if ($user->getRole() === 'student') { ?>
                     <li id='navTabBook'><a href='book.php'>Zeiten buchen</a></li>
+                <?php } else { ?>
+                    <li id='navTabBook'><a href='book.php'>Zeiten setzen</a></li>
                 <?php } ?>
                 <?php if ($user->getRole() === 'teacher') { ?>
                     <li id='navTabTeacher'><a href='teacher.php'>Übersicht</a></li>

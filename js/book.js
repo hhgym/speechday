@@ -12,6 +12,21 @@ $(document).ready(function () {
 
 });
 
+$(document).ready(function () {
+
+    $('#selectStudent').change(function () {
+        var studentSelect = $('#selectStudent');
+        studentSelect.find("option[value='-1']").remove();
+
+        studentSelect = studentSelect.find('option:selected');
+        var studentId = studentSelect.val();
+
+        loadTimeTable(studentId);
+    });
+
+});
+
+
 $(document).on('click', '.btn-book', function (event) {
     var postData = $.parseJSON(this.value);
     var teacherId = postData.teacherId;
@@ -38,10 +53,10 @@ $(document).on('click', '.btn-book', function (event) {
     });
 });
 
-function loadTimeTable(teacherId) {
+function loadTimeTable(userId) {
     var timeTable = $('#timeTable');
     $.ajax({
-        url: 'viewController.php?action=getTimeTable&teacherId=' + teacherId,
+        url: 'viewController.php?action=getTimeTable&userId=' + userId,
         dataType: 'html',
         type: 'GET',
         success: function (data, textStatus, jqXHR) {

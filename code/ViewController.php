@@ -123,8 +123,16 @@ class ViewController extends Controller {
     }
 
     public function action_getTimeTable() {
-        $teacher = UserDAO::getUserForId($_REQUEST['teacherId']);
-        $user = AuthenticationManager::getAuthenticatedUser();
+        
+        $AuthenticatedUser = AuthenticationManager::getAuthenticatedUser();
+        if ($AuthenticatedUser->getRole() === 'student') {
+            $teacher = UserDAO::getUserForId($_REQUEST['userId']);
+            $user = $AuthenticatedUser;
+        } else {
+            $teacher = $AuthenticatedUser;
+            $user = UserDAO::getUserForId($_REQUEST['userId']);
+        }
+        
         $activeEvent = EventDAO::getActiveEvent();
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
         if ($teacher == null || $user == null || $activeEvent == null) {

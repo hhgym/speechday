@@ -14,10 +14,10 @@ include_once 'inc/header.php';
 <div class='container'>
     <div id='tabs-1'>
         <h1>Zeitübersicht</h1>
-        <?php if ($user->getRole() === 'teacher' or 'admin') { ?>
-            <h3>Hier können Sie einen Schüler einem Termine zuteilen!<br><br></h3>
-        <?php } else { ?>
+        <?php if ($user->getRole() === 'student') { ?>
             <h3>Hier können Sie Termine beim gewünschten Lehrer/Lehrerin buchen!<br><br></h3>
+        <?php } else { ?>
+            <h3>Hier können Sie den Terminen einen Schüler zuteilen!<br><br></h3>
         <?php } ?>
     </div>
 </div>
