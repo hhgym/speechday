@@ -124,6 +124,7 @@ class ViewController extends Controller {
 
     public function action_getTimeTable() {
         
+        // find the correct ID's of student and teacher
         $AuthenticatedUser = AuthenticationManager::getAuthenticatedUser();
         if ($AuthenticatedUser->getRole() === 'student') {
             $teacher = UserDAO::getUserForId($_REQUEST['userId']);
@@ -156,7 +157,7 @@ class ViewController extends Controller {
             <?php endif; ?>
         <?php
         } else {
-            ?>
+        ?>
             <h3>Termine für <?php echo('['.$student->getClass() . '] ' .$student->getFirstName() . ' ' . $student->getLastName()) ?></h3>
         <?php
         }
