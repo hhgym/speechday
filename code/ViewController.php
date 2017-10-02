@@ -37,6 +37,59 @@ class ViewController extends Controller {
         return false;
     }
 
+    public function action_getSetSlotsForm() {
+    $activeEvent = EventDAO::getActiveEvent();
+    $role = $user = AuthenticationManager::getAuthenticatedUser(); 
+    ?>
+    <?php if ($activeEvent != null): ?>
+            <?php if (($activeEvent->getFinalPostDate() > time()) && ($activeEvent->getStartPostDate() < time())): ?>
+                <?php if ($user->getRole() === 'student') { 
+                    $this->getSetSlotsFormForStudents(); 
+                } else {
+                    $this->getSetSlotsFormForTeachers();
+                } ?>
+
+               <div id='timeTable'></div>
+            <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
+                <h3>Buchungen sind nicht mehr möglich!</h3>
+            <?php elseif ($activeEvent->getStartPostDate() > time()): ?>
+                <h3>Buchungen sind noch nicht möglich!</h3>
+                <br>
+                Buchungen für den <?php echo($activeEvent->getName()); ?> am <?php echo(toDate($activeEvent->getDateFrom(),'d.m.Y')); ?> sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?> Uhr  bis <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
+           <?php endif; ?>
+            
+        <?php else: ?>
+            <h3>Es gibt momentan keinen Elternsprechtag!</h3>
+        <?php endif; ?>
+    <?php
+    }
+    
+    public function getSetSlotsFormForStudents() {
+    ?>
+        <form id='chooseTeacherForm'>
+            <div class='form-group'>
+                <label for='selectTeacher'>Lehrer / Lehrerin</label>
+                <select class='form-control' id='selectTeacher' name='teacher'>
+                    <?php echo(getTeacherOptions()); ?>
+                </select>
+            </div>
+        </form> 
+    <?php
+    }
+    
+    public function getSetSlotsFormForTeachers() {
+    ?>
+        <form id='chooseTeacherForm'>
+            <div class='form-group'>
+                <label for='selectTeacher'>Schüler</label>
+                <select class='form-control' id='selectStudent' name='student'>
+                    <?php echo(getTeacherOptions()); ?>
+                </select>
+            </div>
+        </form> 
+    <?php        
+    }
+    
     public function action_getChangeEventForm() {
         $events = EventDAO::getEvents();
         if (count($events) > 0) {
