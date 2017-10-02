@@ -127,20 +127,20 @@ class ViewController extends Controller {
         $AuthenticatedUser = AuthenticationManager::getAuthenticatedUser();
         if ($AuthenticatedUser->getRole() === 'student') {
             $teacher = UserDAO::getUserForId($_REQUEST['userId']);
-            $user = $AuthenticatedUser;
+            $student = $AuthenticatedUser;
         } else {
             $teacher = $AuthenticatedUser;
-            $user = UserDAO::getUserForId($_REQUEST['userId']);
+            $student = UserDAO::getUserForId($_REQUEST['userId']);
         }
         
         $activeEvent = EventDAO::getActiveEvent();
         $noSlotsFoundWarning = '<h3>Keine Termine vorhanden!</h3>';
-        if ($teacher == null || $user == null || $activeEvent == null) {
+        if ($teacher == null || $student == null || $activeEvent == null) {
             echo($noSlotsFoundWarning);
             return;
         }
         $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
-        $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $student->getId());
         $canBook = !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlots);
         $room = RoomDAO::getRoomForTeacherId($teacher->getId());
         if (count($slots) <= 0) {
@@ -156,7 +156,11 @@ class ViewController extends Controller {
             <thead>
             <tr>
                 <th width='15%'>Uhrzeit</th>
-                <th width='30%'>Zeitplan Lehrer/in</th>
+                <?php if ($AuthenticatedUser->getRole() === 'student'): ?>
+                    <th width='30%'>Zeitplan Lehrer/in</th>
+                <?php else: ?>
+                    <th width='30%'>Zeitplan Schüler/in</th>
+                <?php endif; ?>
                 <th width='40%'>Mein Zeitplan</th>
                 <th width='15%'>Aktion</th>
             </tr>
@@ -167,7 +171,7 @@ class ViewController extends Controller {
                 $teacherAvailable = $slot->getStudentId() == '';
                 $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
                 $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
-                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $user->getId(), 'eventId' => $activeEvent->getId())));
+                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $student->getId(), 'eventId' => $activeEvent->getId())));
                 ?>
                 <?php if ($slot->getType() == 2): ?>
                 <tr class='es-time-table-break'>
@@ -177,8 +181,13 @@ class ViewController extends Controller {
             <?php else: ?>
                 <tr class='<?php echo($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                     <td><?php echo($timeTd) ?></td>
-                    <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
-                    <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                    <?php if ($AuthenticatedUser->getRole() === 'student'): ?>
+                        <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                        <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                    <?php else: ?>
+                        <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                        <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                    <?php endif; ?>
                     <td>
                         <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
                             <button type='button' class='btn btn-primary btn-book'

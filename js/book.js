@@ -29,7 +29,7 @@ $(document).ready(function () {
 
 $(document).on('click', '.btn-book', function (event) {
     var postData = $.parseJSON(this.value);
-    var teacherId = postData.teacherId;
+    var userId = postData.userId;
     var errorText = '<h3>Beim Laden der Termine ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>';
     postData.action = 'changeSlot';
 
@@ -39,9 +39,9 @@ $(document).on('click', '.btn-book', function (event) {
         data: postData,
         success: function (data, textStatus, jqXHR) {
             if (data.indexOf('success') > -1) {
-                loadTimeTable(teacherId);
+                loadTimeTable(userId);
             } else if (data.indexOf('dirtyRead') > -1) {
-                loadTimeTable(teacherId);
+                loadTimeTable(userId);
                 alert("WARNUNG!\n\nDer gewünschte Termin wurde in der Zwischenzeit vergeben! Bitte wählen Sie einen anderen Termin!");
             } else {
                 $('#timeTable').html(errorText);
