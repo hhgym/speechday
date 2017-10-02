@@ -28,6 +28,7 @@ $(document).ready(function () {
 
 
 $(document).on('click', '.btn-book', function (event) {
+    // userId is the ID of the user who's slot are booked
     var postData = $.parseJSON(this.value);
     var userId = postData.userId;
     var errorText = '<h3>Beim Laden der Termine ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>';

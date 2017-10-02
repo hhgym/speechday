@@ -129,9 +129,9 @@ class SlotDAO extends AbstractDAO {
         return $slots;
     }
 
-    public static function setStudentToSlot($eventId, $slotId, $studentId) {
+    public static function setStudentToSlot($eventId, $slotId, $studentId, $teacherId) {
         $con = self::getConnection();
-        $result = self::query($con, 'UPDATE slot SET studentId = ? WHERE id = ? AND eventId = ? AND type = 1 AND available = 1 AND studentId IS NULL;', array($studentId, $slotId, $eventId), true);
+        $result = self::query($con, 'UPDATE slot SET studentId = ? WHERE id = ? AND eventId = ? AND teacherId = ? AND type = 1 AND available = 1 AND studentId IS NULL;', array($studentId, $slotId, $eventId, $teacherId), true);
         
         return $result;
     }   

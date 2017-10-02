@@ -49,7 +49,7 @@ class ViewController extends Controller {
                     $this->getSetSlotsFormForTeachers();
                 } ?>
 
-               <div id='timeTable'></div>
+            <div id='timeTable'></div>
             <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
                 <h3>Buchungen sind nicht mehr möglich!</h3>
             <?php elseif ($activeEvent->getStartPostDate() > time()): ?>
@@ -66,7 +66,7 @@ class ViewController extends Controller {
     
     public function getSetSlotsFormForStudents() {
     ?>
-        <form id='chooseTeacherForm'>
+        <form id='chooseStudentForm'>
             <div class='form-group'>
                 <label for='selectTeacher'>Lehrer / Lehrerin</label>
                 <select class='form-control' id='selectTeacher' name='teacher'>
@@ -147,11 +147,21 @@ class ViewController extends Controller {
             echo($noSlotsFoundWarning);
             return;
         }
+        
+        if ($AuthenticatedUser->getRole() === 'student') {
         ?>
-        <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
-        <?php if ($room != null): ?>
-            <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getRoomName())) ?></h4>
-        <?php endif; ?>
+            <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
+            <?php if ($room != null): ?>
+                <h4>Raum: <?php echo(escape($room->getRoomNumber()) . ' &ndash; ' . escape($room->getRoomName())) ?></h4>
+            <?php endif; ?>
+        <?php
+        } else {
+            ?>
+            <h3>Termine für <?php echo('['.$student->getClass() . '] ' .$student->getFirstName() . ' ' . $student->getLastName()) ?></h3>
+        <?php
+        }
+        ?>
+
         <table class='table table-hover es-time-table'>
             <thead>
             <tr>
@@ -171,7 +181,14 @@ class ViewController extends Controller {
                 $teacherAvailable = $slot->getStudentId() == '';
                 $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
                 $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
-                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'userId' => $student->getId(), 'eventId' => $activeEvent->getId())));
+                // timetableUserId is the ID of the user the timetable has to be load
+                // When a student is logged in then the teacher timetable is has to be loading
+                if ($AuthenticatedUser->getRole() === 'student') {
+                    $timetableUserId = $teacher->getId();
+                } else {
+                    $timetableUserId = $student->getId();
+                }
+                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'studentId' => $student->getId(), 'userId' => $timetableUserId, 'eventId' => $activeEvent->getId())));
                 ?>
                 <?php if ($slot->getType() == 2): ?>
                 <tr class='es-time-table-break'>

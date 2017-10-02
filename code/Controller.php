@@ -410,13 +410,14 @@ class Controller {
 
     protected function action_changeSlot() {
         $slotId = $_REQUEST['slotId'];
-        $userId = $_REQUEST['userId'];
+        $studentId = $_REQUEST['studentId'];
+        $teacherId = $_REQUEST['teacherId'];
         $eventId = $_REQUEST['eventId'];
 
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
-        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
+        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $studentId, $teacherId);
         if ($result['success']) {
             if ($result['rowCount'] > 0) {
                 echo('success');

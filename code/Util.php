@@ -82,6 +82,11 @@ function getTeacherOptions() {
 function getStudentsOptions() {
     $students = UserDAO::getUsersForRole('student');
 
+    usort($students, function($a, $b)
+    {
+        return strcmp($a->getClass(), $b->getClass);
+    });
+    
     $options = '<option value="-1">Bitte wähle einen Schüler aus ...</option>';
     foreach ($students as $student) {
         $options .= sprintf('<option value="%s">%s</option>', $student->getId(), '['.$student->getClass().'] '. $student->getFirstName() . ' ' . $student->getLastName());
