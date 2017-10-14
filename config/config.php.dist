@@ -24,6 +24,10 @@ return array(
         'url' => '',
         'email' => '',
     ),
+    'imap_auth' => array(
+        'server' => '',
+        'domain' => ''
+    ),
     'uploaddirectory' => '',
     'version' => '1.0.0',
     'installed' => false,

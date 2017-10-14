@@ -103,6 +103,18 @@ include_once 'inc/header.php';
                 <label for='inputTitleAbbreviation'>Title Abkürzung</label>
                 <input type='text' class='form-control' id='inputTitleAbbreviation' name='titleAbbreviation' placeholder='' value="<?php echo(escape($config->getConfig('titleAbbreviation'))); ?>" >
             </div>
+        
+        <h3>Imap Auth</h3>
+            
+            <div class='form-group'>
+                <label for='inputImapServer'>Server</label>
+                <input type='text' class='form-control' id='inputImapServer' name='imapServer' placeholder='' value="<?php echo(escape($config->getConfig('imap_auth')['server'])); ?>" >
+            </div>
+            
+            <div class='form-group'>
+                <label for='inputImapDomain'>Domain</label>
+                <input type='text' class='form-control' id='inputImapDomain' name='imapDomain' placeholder='' value="<?php echo(escape($config->getConfig('imap_auth')['domain'])); ?>" >
+            </div>
             
             <button type='submit' class='btn btn-primary' id='btn-edit-config'>Speichern</button>
             
