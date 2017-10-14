@@ -9,6 +9,68 @@ body {
   display: inline;
 }
 
+form div.left
+{
+	display:inline;
+	float:left;
+	width:48%;
+}
+
+form div.right
+{
+	display:inline;
+	float:right;
+	width:48%;
+}
+
+.column
+{
+    display:inline;
+    float: left;
+    width: 33%;
+}
+
+input.small
+{
+	width:25%;
+}
+
+input.medium
+{
+	width:50%;
+}
+
+input.large
+{
+	width:99%;
+}
+
+form div.left .medium
+{
+	width:100%;
+}
+
+form div.right .medium
+{
+	width:100%;
+}
+
+form div.mid .medium
+{
+	width:100%;
+}
+
+.below
+{
+	clear:both;
+	color:#444;
+	display:block;
+	font-size:10px;
+	line-height:9px;
+	margin:2px;
+	padding-top:3px;
+}
+
 .form-signin {
     max-width: 500px;
     padding: 19px 29px 29px;

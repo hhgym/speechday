@@ -15,8 +15,9 @@ function showMessage(element, type, message) {
 
 function PrintElem(elem, pageTitle) {
     var data = $(elem).html();
+    var url = document.getElementById('schoolUrl').value;
 
-    var printWindow = window.open('www.dachsberg.at', pageTitle, '');
+    var printWindow = window.open(url, pageTitle, '');
     var doc = printWindow.document;
     doc.write("<html><head><title>" + pageTitle + "</title>");
     doc.write("<link href='css/print.css' rel='stylesheet' type='text/css' media='all' />");

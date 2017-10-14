@@ -1,0 +1,30 @@
+<?php
+return array(
+ 	'database' => array(
+        'host'      => 'localhost',
+        'name'  => '',
+        'username'  => '',
+        'password'  => '',
+        'prefix'    => '',
+        'extension' => '[pdo|mysqli]'
+    ),
+    'title' => 'Eltern Sprechtags Verwaltung',
+    'titleAbbreviation' => 'ESV',
+    'school' => array(
+        'name' => '',
+        'adress' => array(
+            'street' => '',
+            'postcode' => '',
+            'city' => '',
+            'state' => '',
+            'land' => '',
+        ),
+        'phonenumber' => '',
+        'faxnumber' => '',
+        'url' => '',
+        'email' => '',
+    ),
+    'uploaddirectory' => '',
+    'version' => '1.0.0',
+    'installed' => false,
+);
