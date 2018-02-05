@@ -181,17 +181,20 @@ class ViewController extends Controller {
             <?php foreach ($slots as $slot):
                 $fromDate = $slot->getDateFrom();
                 $teacherAvailable = $slot->getStudentId() == '';
+                if ($slot->getStudentId() !== '') {
+                    $slotStudent = UserDAO::getUserForId($slot->getStudentId());
+                }
                 $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
                 $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
                 // timetableUserId is the ID of the user the timetable has to be load
                 // When a student is logged in then the teacher timetable is has to be loading
-                // if ($AuthenticatedUser->getRole() === 'student') {
-                    // $timetableUserId = $teacher->getId();
-                // } else {
-                    // $timetableUserId = $student->getId();
-                // }
-                $userId = $AuthenticatedUser->getId();
-                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'studentId' => $student->getId(), 'userId' => $userId, 'eventId' => $activeEvent->getId()))); //'userId' => $timetableUserId
+                if ($AuthenticatedUser->getRole() === 'student') {
+                    $timetableUserId = $teacher->getId();
+                } else {
+                    $timetableUserId = $student->getId();
+                }
+                // $userId = $AuthenticatedUser->getId();
+                $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'studentId' => $student->getId(), 'userId' => $timetableUserId, 'eventId' => $activeEvent->getId()))); //'userId' => $userId
                 ?>
                 <?php if ($slot->getType() == 2): ?>
                 <tr class='es-time-table-break'>
@@ -206,7 +209,7 @@ class ViewController extends Controller {
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
                     <?php else: ?>
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
-                        <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                        <td><?php echo($teacherAvailable ? 'frei' : '['.$slotStudent->getClass().'] '. $slotStudent->getFirstName() . ' ' . $slotStudent->getLastName() ) ?></td>
                     <?php endif; ?>
                     <td>
                         <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
