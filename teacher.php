@@ -16,7 +16,7 @@ include_once 'inc/header.php';
     <h1>Meine Übersicht</h1>
 
     <div class='panel-group' id='accordion'>
-
+<!--
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
@@ -52,7 +52,7 @@ include_once 'inc/header.php';
                 </div>
             </div>
         </div>
-
+-->
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h4 class='panel-title'>
@@ -61,7 +61,7 @@ include_once 'inc/header.php';
                     </a>
                 </h4>
             </div>
-            <div id='attendancemanagement' class='panel-collapse collapse'>
+            <div id='attendancemanagement' class='panel-collapse collapse in'>
                 <div class='panel-body'>
 
                     <h4>
