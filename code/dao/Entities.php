@@ -143,8 +143,9 @@ class Slot extends Entity {
     private $dateTo;
     private $type;
     private $available;
+    private $bookedbyteacher;
 
-    public function __construct($id, $eventId, $teacherId, $studentId, $dateFrom, $dateTo, $type, $available) {
+    public function __construct($id, $eventId, $teacherId, $studentId, $dateFrom, $dateTo, $type, $available, $bookedbyteacher) {
         parent::__construct($id);
         $this->eventId = $eventId;
         $this->teacherId = $teacherId;
@@ -153,6 +154,7 @@ class Slot extends Entity {
         $this->dateTo = $dateTo;
         $this->type = $type;
         $this->available = $available;
+        $this->bookedbyteacher = $bookedbyteacher;
     }
 
     public function getEventId() {
@@ -181,6 +183,10 @@ class Slot extends Entity {
 
     public function getAvailable() {
         return $this->available;
+    }
+    
+    public function getBookedByTeacher() {
+        return $this->bookedbyteacher;
     }
 }
 

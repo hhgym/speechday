@@ -84,7 +84,7 @@ function getStudentsOptions() {
 
     usort($students, function($a, $b)
     {
-        return strcmp($a->getClass(), $b->getClass);
+        return strcmp($a->getfirstName(), $b->getfirstName());
     });
     
     $options = '<option value="-1">Bitte wähle einen Schüler aus ...</option>';

@@ -412,12 +412,19 @@ class Controller {
         $slotId = $_REQUEST['slotId'];
         $studentId = $_REQUEST['studentId'];
         $teacherId = $_REQUEST['teacherId'];
+        $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
 
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
-        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $studentId, $teacherId);
+        if (UserDAO::getUserForId($userId)->getRole() == 'teacher') {
+            $bookedbyTeacher = 1;
+        } else {
+            $bookedbyTeacher = 0;
+        }
+
+        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $studentId, $teacherId, $bookedbyTeacher);
         if ($result['success']) {
             if ($result['rowCount'] > 0) {
                 echo('success');

@@ -20,7 +20,7 @@
                     <li id='navTabBook'><a href='book.php'>Zeiten setzen</a></li>
                 <?php } ?>
                 <?php if ($user->getRole() === 'teacher') { ?>
-                    <li id='navTabTeacher'><a href='teacher.php'>Übersicht</a></li>
+                    <li id='navTabTeacher'><a href='teacher.php'>Einstellungen</a></li>
                 <?php } ?>
                 <?php if ($user->getRole() === 'admin') { ?>
                     <li id='navTabAdmin'><a href='admin.php'>Administration</a></li>
