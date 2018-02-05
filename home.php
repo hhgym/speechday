@@ -18,7 +18,7 @@
                 <label for='selectType'>Darstellungstyp</label>
                 <select class='form-control' id='selectType' name='type'>
                     <option value='1' selected>Kompakt</option>
-                    <option value='0'>Vollständig</option>
+                    <option value='2'>Vollständig</option>
                 </select>
             </div>
         </form>

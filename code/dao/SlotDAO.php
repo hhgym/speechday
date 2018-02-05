@@ -82,7 +82,7 @@ class SlotDAO extends AbstractDAO {
                 $type = (($breakCounter % $breakFrequency != 0) || ($breakCounter == 0)) ? 1 : 2;
             }
             if ($asDummy) {
-                $slots[] = new Slot(null, null, null, null, $startTime, $endTime, $type, 1);
+                $slots[] = new Slot(null, null, null, null, $startTime, $endTime, $type, 1, 0);
             } else {
                 $slots[] = array('start' => $startTime, 'end' => $endTime, 'type' => $type);
             }
@@ -98,7 +98,7 @@ class SlotDAO extends AbstractDAO {
         $res = self::query($con, 'SELECT id, eventId, teacherId, studentId, dateFrom, dateTo, type, available FROM slot WHERE eventId = ? AND teacherId = ? AND available = 1;', array($eventId, $teacherId));
 
         while ($s = self::fetchObject($res)) {
-            $slots[] = new Slot($s->id, $s->eventId, $s->teacherId, $s->studentId, $s->dateFrom, $s->dateTo, $s->type, $s->available);
+            $slots[] = new Slot($s->id, $s->eventId, $s->teacherId, $s->studentId, $s->dateFrom, $s->dateTo, $s->type, $s->available, $s->bookedbyteacher);
         }
         self::close($res);
         return $slots;
@@ -107,10 +107,10 @@ class SlotDAO extends AbstractDAO {
     public static function getBookedSlotsForStudent($eventId, $studentId) {
         $slots = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT s.id, s.eventId, s.teacherId, s.dateFrom, s.dateTo, u.firstName, u.lastName, u.title FROM slot AS s JOIN user AS u ON s.teacherId = u.id WHERE eventId = ? AND studentId = ?;', array($eventId, $studentId));
+        $res = self::query($con, 'SELECT s.id, s.eventId, s.teacherId, s.dateFrom, s.dateTo, s.bookedbyteacher, u.firstName, u.lastName, u.title FROM slot AS s JOIN user AS u ON s.teacherId = u.id WHERE eventId = ? AND studentId = ?;', array($eventId, $studentId));
 
         while ($s = self::fetchObject($res)) {
-            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'teacherId' => $s->teacherId, 'teacherName' => $s->title .' '. $s->firstName . ' ' . $s->lastName);
+            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'teacherId' => $s->teacherId, 'teacherFirstName' => $s->lastName, 'teacherLastName' => $s->lastName, 'teacherName' => $s->title .' '. $s->firstName . ' ' . $s->lastName, 'bookedByTeacher' => $s->bookedbyteacher);
         }
         self::close($res);
         return $slots;
@@ -119,19 +119,19 @@ class SlotDAO extends AbstractDAO {
     public static function getBookedSlotsForTeacher($eventId, $teacherId) {
         $slots = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT s.id, s.eventId, s.teacherId, s.dateFrom, s.dateTo, u.firstName, u.lastName, u.class, u.role FROM slot AS s JOIN user AS u ON s.studentId = u.id WHERE eventId = ? AND teacherId = ?;', array($eventId, $teacherId));
+        $res = self::query($con, 'SELECT s.id, s.eventId, s.teacherId, s.studentId, s.dateFrom, s.dateTo, s.bookedbyteacher, u.firstName, u.lastName, u.class, u.role FROM slot AS s JOIN user AS u ON s.studentId = u.id WHERE eventId = ? AND teacherId = ?;', array($eventId, $teacherId));
 
         while ($s = self::fetchObject($res)) {
             $class = $s->role != 'student' ? ' (Lehrer)' : ' (' . $s->class . ')';
-            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'studentName' => $s->firstName . ' ' . $s->lastName, 'studentClass' => $class);
+            $slots[$s->dateFrom] = array('id' => $s->id, 'eventId' => $s->eventId, 'dateFrom' => $s->dateFrom, 'dateTo' => $s->dateTo, 'studentId' => $s->studentId, 'studentFirstName' => $s->lastName, 'studentLastName' => $s->lastName,'studentName' => $s->firstName . ' ' . $s->lastName, 'studentClass' => $class, 'bookedByTeacher' => $s->bookedbyteacher);
         }
         self::close($res);
         return $slots;
     }
 
-    public static function setStudentToSlot($eventId, $slotId, $studentId) {
+    public static function setStudentToSlot($eventId, $slotId, $studentId, $teacherId, $bookedbyTeacher) {
         $con = self::getConnection();
-        $result = self::query($con, 'UPDATE slot SET studentId = ? WHERE id = ? AND eventId = ? AND type = 1 AND available = 1 AND studentId IS NULL;', array($studentId, $slotId, $eventId), true);
+        $result = self::query($con, 'UPDATE slot SET studentId = ?, bookedbyteacher = ? WHERE id = ? AND eventId = ? AND teacherId = ? AND type = 1 AND available = 1 AND studentId IS NULL;', array($studentId, $bookedbyTeacher, $slotId, $eventId, $teacherId), true);
         
         return $result;
     }   
@@ -146,7 +146,7 @@ class SlotDAO extends AbstractDAO {
     
     public static function deleteStudentFromSlot($eventId, $slotId) {
         $con = self::getConnection();
-        $s = self::query($con, 'UPDATE slot SET studentId = NULL WHERE id = ? AND eventId = ?;', array($slotId, $eventId), true);
+        $s = self::query($con, 'UPDATE slot SET studentId = NULL, bookedbyteacher = 0 WHERE id = ? AND eventId = ?;', array($slotId, $eventId), true);
 
         return $s['success'];
     }
