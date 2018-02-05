@@ -418,7 +418,9 @@ class Controller {
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
-        if (UserDAO::getUserForId($userId)->getRole() == 'teacher') {
+        
+        // if (UserDAO::getUserForId($userId)->getRole() == 'teacher') {
+        if (AuthenticationManager::getAuthenticatedUser()->getRole() == 'teacher') {
             $bookedbyTeacher = 1;
         } else {
             $bookedbyTeacher = 0;
