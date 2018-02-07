@@ -4,7 +4,7 @@
 	
 ?>
 
-<h3>Done</h3>
+<h3>Fertig</h3>
 
 <p>Die Installation ist (fast) fertig! <b>Der Installer wird nun den Ordner "install" löschen und Sie auf die Startseite weiterleiten.</b></p><br>
 <p>Bitte kontrollieren Sie, ob der Ordner "install" auch entfernt worden ist.</p>
