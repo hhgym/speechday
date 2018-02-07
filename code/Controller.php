@@ -795,6 +795,10 @@ class Controller {
         
         $config->setConfig('title', $_REQUEST['title']);
         $config->setConfig('titleAbbreviation', $_REQUEST['titleAbbreviation']);
+        
+        $config->setConfig('imap_auth.server', $_REQUEST['imapServer']);
+        $config->setConfig('imap_auth.domain', $_REQUEST['imapDomain']);
+        
         file_put_contents(dirname(__DIR__).'/config/config.php', "<?php return " . var_export($config->getConfig(), true) . ";" );
         
         echo 'success';
