@@ -29,7 +29,7 @@
 	}
    
    // insert admin account
-   mysqli_query($con, "INSERT INTO user (userName, passwordHash, firstName, lastName, class, role) VALUES ('admin', '$2y$10$rxHdBYx/Lq2Od6etxBIj7OfMhVwEQpJn4bD.4tCAD/4g7VyTrPAum', 'AdminVN', 'AdminNN', '', 'admin')");
+   mysqli_query($con, 'INSERT INTO user (userName, passwordHash, firstName, lastName, class, role) VALUES ("admin", "$2y$10\$rxHdBYx/Lq2Od6etxBIj7OfMhVwEQpJn4bD.4tCAD/4g7VyTrPAum", "AdminVN", "AdminNN", "", "admin")');
    
 	// close connection
 	mysqli_close($con);
