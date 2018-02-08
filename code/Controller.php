@@ -563,6 +563,25 @@ class Controller {
         }
     }
 
+    protected function action_editUserPwd() {
+        $userId = $_REQUEST['userId'];
+        $userName = $_REQUEST['userName'];
+        $password = $_REQUEST['password'];
+        $firstName = $_REQUEST['firstName'];
+        $lastName = $_REQUEST['lastName'];
+        $class = $_REQUEST['class'];
+        $type = $_REQUEST['type'];
+
+        $updateUserResult = UserDAO::update($userId, $userName, $password, $firstName, $lastName, $class, $type);
+
+        if ($updateUserResult) {
+            echo('success');
+        } else {
+            echo('error');
+        }
+    }
+    
+    
     protected function action_createNewsletter() {
         if (!UserDAO::checkAccessData()) {
             echo 'Keine Schüler-Zugangsdaten vorhanden! Es müssen zuerst die Schüler importiert werden!';
