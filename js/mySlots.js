@@ -35,7 +35,7 @@ $(document).on('click', '.btn-delete', function (event) {
 function loadTimeTable(typeId) {
     var timeTable = $('#timeTable');
     $.ajax({
-        url: 'viewController.php?action=getMySlotsTable&typeId=' + typeId,
+        url: 'viewController.php?action=getSlotsTableForUser&typeId=' + typeId,
         dataType: 'html',
         type: 'GET',
         success: function (data, textStatus, jqXHR) {

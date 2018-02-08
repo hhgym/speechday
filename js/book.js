@@ -12,9 +12,25 @@ $(document).ready(function () {
 
 });
 
+$(document).ready(function () {
+
+    $('#selectStudent').change(function () {
+        var studentSelect = $('#selectStudent');
+        studentSelect.find("option[value='-1']").remove();
+
+        studentSelect = studentSelect.find('option:selected');
+        var studentId = studentSelect.val();
+
+        loadTimeTable(studentId);
+    });
+
+});
+
+
 $(document).on('click', '.btn-book', function (event) {
+    // userId is the ID of the user which timetable has to be show
     var postData = $.parseJSON(this.value);
-    var teacherId = postData.teacherId;
+    var userId = postData.userId;
     var errorText = '<h3>Beim Laden der Termine ist ein Fehler aufgetreten!<br>Bitte versuche es später erneut!</h3>';
     postData.action = 'changeSlot';
 
@@ -24,9 +40,9 @@ $(document).on('click', '.btn-book', function (event) {
         data: postData,
         success: function (data, textStatus, jqXHR) {
             if (data.indexOf('success') > -1) {
-                loadTimeTable(teacherId);
+                loadTimeTable(userId);
             } else if (data.indexOf('dirtyRead') > -1) {
-                loadTimeTable(teacherId);
+                loadTimeTable(userId);
                 alert("WARNUNG!\n\nDer gewünschte Termin wurde in der Zwischenzeit vergeben! Bitte wählen Sie einen anderen Termin!");
             } else {
                 $('#timeTable').html(errorText);
@@ -38,10 +54,10 @@ $(document).on('click', '.btn-book', function (event) {
     });
 });
 
-function loadTimeTable(teacherId) {
+function loadTimeTable(userId) {
     var timeTable = $('#timeTable');
     $.ajax({
-        url: 'viewController.php?action=getTimeTable&teacherId=' + teacherId,
+        url: 'viewController.php?action=getTimeTable&userId=' + userId,
         dataType: 'html',
         type: 'GET',
         success: function (data, textStatus, jqXHR) {

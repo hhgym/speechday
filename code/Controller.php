@@ -410,13 +410,23 @@ class Controller {
 
     protected function action_changeSlot() {
         $slotId = $_REQUEST['slotId'];
+        $studentId = $_REQUEST['studentId'];
+        $teacherId = $_REQUEST['teacherId'];
         $userId = $_REQUEST['userId'];
         $eventId = $_REQUEST['eventId'];
 
         $info = json_encode(array('eventId' => $eventId, 'slotId' => $slotId));
         LogDAO::log($userId, LogDAO::LOG_ACTION_BOOK_SLOT, $info);
 
-        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $userId);
+        
+        // if (UserDAO::getUserForId($userId)->getRole() == 'teacher') {
+        if (AuthenticationManager::getAuthenticatedUser()->getRole() == 'teacher') {
+            $bookedbyTeacher = 1;
+        } else {
+            $bookedbyTeacher = 0;
+        }
+
+        $result = SlotDAO::setStudentToSlot($eventId, $slotId, $studentId, $teacherId, $bookedbyTeacher);
         if ($result['success']) {
             if ($result['rowCount'] > 0) {
                 echo('success');
@@ -785,6 +795,10 @@ class Controller {
         
         $config->setConfig('title', $_REQUEST['title']);
         $config->setConfig('titleAbbreviation', $_REQUEST['titleAbbreviation']);
+        
+        $config->setConfig('imap_auth.server', $_REQUEST['imapServer']);
+        $config->setConfig('imap_auth.domain', $_REQUEST['imapDomain']);
+        
         file_put_contents(dirname(__DIR__).'/config/config.php', "<?php return " . var_export($config->getConfig(), true) . ";" );
         
         echo 'success';
