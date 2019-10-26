@@ -89,7 +89,7 @@ function getStudentsOptions() {
     
     $options = '<option value="-1">Bitte wähle einen Schüler aus ...</option>';
     foreach ($students as $student) {
-        $options .= sprintf('<option value="%s">%s</option>', $student->getId(), '['.$student->getClass().'] '. $student->getFirstName() . ' ' . $student->getLastName());
+        $options .= sprintf('<option value="%s">%s</option>', $student->getId(), $student->getFirstName() . ' ' . $student->getLastName() . ' ['. $student->getClass() .']');
     }
 
     return $options;
