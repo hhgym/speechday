@@ -79,17 +79,25 @@ function getTeacherOptions() {
     return $options;
 }
 
+function sort_students_for_form($array) {
+    
+    usort($array,function($a,$b){
+        $c = strnatcmp($a->getClass(),$b->getClass());
+        $c .= strcmp($a->getFirstName(), $b->getFirstName());
+        $c .= strcmp($a->getLastName(), $b->getLastName());
+    return $c;
+    });
+    
+    return $array;
+}
 function getStudentsOptions() {
     $students = UserDAO::getUsersForRole('student');
 
-    usort($students, function($a, $b)
-    {
-        return strcmp($a->getfirstName(), $b->getfirstName());
-    });
+    $students = sort_students_for_form($students);
     
     $options = '<option value="-1">Bitte wähle einen Schüler aus ...</option>';
     foreach ($students as $student) {
-        $options .= sprintf('<option value="%s">%s</option>', $student->getId(), $student->getFirstName() . ' ' . $student->getLastName() . ' ['. $student->getClass() .']');
+        $options .= sprintf('<option value="%s">%s</option>', $student->getId(), $student->getClass() . ' - ' . $student->getFirstName() . ' ' . $student->getLastName());
     }
 
     return $options;
