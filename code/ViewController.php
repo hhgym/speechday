@@ -218,7 +218,7 @@ class ViewController extends Controller {
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
                     <?php else: ?>
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
-                        <td><?php echo($teacherAvailable ? 'frei' : $slotStudent->getFirstName() . ' ' . $slotStudent->getLastName() . ' ['.$slotStudent->getClass().']'. ) ?></td>
+                        <td><?php echo($teacherAvailable ? 'frei' : $slotStudent->getFirstName() . ' ' . $slotStudent->getLastName() . ' ['.$slotStudent->getClass().']' ) ?></td>
                     <?php endif; ?>
                     <td>
                         <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
