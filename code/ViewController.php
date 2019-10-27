@@ -41,23 +41,25 @@ class ViewController extends Controller {
     $activeEvent = EventDAO::getActiveEvent();
     $role = $user = AuthenticationManager::getAuthenticatedUser(); 
     ?>
-    <?php if ($activeEvent != null): ?>
-            <?php if (($activeEvent->getFinalPostDate() > time()) && ($activeEvent->getStartPostDate() < time())): ?>
-                <?php if ($user->getRole() === 'student') { 
-                    $this->getSetSlotsFormForStudents(); 
-                } else {
-                    $this->getSetSlotsFormForTeachers();
-                } ?>
-
+        <?php if ($activeEvent != null): ?>
+            <?php if ($user->getRole() === 'teacher'): 
+                $this->getSetSlotsFormForTeachers(); ?>
+            Buchungen durch Eltern sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?> Uhr bis zum <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
             <div id='timeTable'></div>
-            <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
-                <h3>Buchungen sind nicht mehr möglich!</h3>
-            <?php elseif ($activeEvent->getStartPostDate() > time()): ?>
-                <h3>Buchungen sind noch nicht möglich!</h3>
-                <br>
-                Buchungen für den <?php echo($activeEvent->getName()); ?> am <?php echo(toDate($activeEvent->getDateFrom(),'d.m.Y')); ?> sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?> Uhr  bis <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
-           <?php endif; ?>
-            
+            <?php else: ?>
+                <?php if (($activeEvent->getFinalPostDate() > time()) && ($activeEvent->getStartPostDate() < time())): ?>
+                    <?php if ($user->getRole() === 'student') { 
+                        $this->getSetSlotsFormForStudents(); 
+                    } ?>
+                <div id='timeTable'></div>
+                <?php elseif ($activeEvent->getFinalPostDate() < time()): ?>
+                    <h3>Buchungen sind nicht mehr möglich!</h3>
+                <?php elseif ($activeEvent->getStartPostDate() > time()): ?>
+                    <h3>Buchungen sind noch nicht möglich!</h3>
+                    <br>
+                    Buchungen für den <?php echo($activeEvent->getName()); ?> am <?php echo(toDate($activeEvent->getDateFrom(),'d.m.Y')); ?> sind ab dem <?php echo(toDate($activeEvent->getStartPostDate(), 'd.m.Y H:i')); ?> Uhr bis zum <?php echo(toDate($activeEvent->getFinalPostDate(), 'd.m.Y H:i')); ?> Uhr möglich.
+               <?php endif; ?>
+            <?php endif; ?>
         <?php else: ?>
             <h3>Es gibt momentan keinen Elternsprechtag!</h3>
         <?php endif; ?>
