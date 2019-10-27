@@ -153,6 +153,16 @@ function getActiveSpeechdayText() {
     }
 }
 
+function isBookingtimeForActiveSpeechday() {
+    $activeEvent = EventDAO::getActiveEvent();
+    
+    if ($activeEvent->getStartPostDate() > time()) {
+            return true;
+    } else {
+        return false;
+    }
+}
+
 function optionalBreak() {
     return '<span class="no-print"><br></span><span class="only-print"> - </span>';
 }
