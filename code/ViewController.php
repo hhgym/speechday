@@ -305,7 +305,7 @@ class ViewController extends Controller {
         }
         
         $slots = SlotDAO::getSlotsForTeacherId($activeEvent->getId(), $teacher->getId());
-        $bookedSlots = SlotDAO::getBookedSlotsForStudent($activeEvent->getId(), $user->getId());
+        $bookedSlots = SlotDAO::getBookedSlotsForTeacher($activeEvent->getId(), $user->getId());
         $canBook = !$this->checkIfTeacherIsBooked($teacher->getId(), $bookedSlots);
         $room = RoomDAO::getRoomForTeacherId($teacher->getId());
 
