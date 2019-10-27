@@ -159,7 +159,7 @@ class ViewController extends Controller {
         <?php
         } else {
         ?>
-            <h3>Termine für <?php echo('['.$student->getClass() . '] ' .$student->getFirstName() . ' ' . $student->getLastName()) ?></h3>
+            <h3>Termine für <?php echo($student->getFirstName() . ' ' . $student->getLastName() . ' ['.$student->getClass() . ']') ?></h3>
         <?php
         }
         ?>
@@ -196,20 +196,29 @@ class ViewController extends Controller {
                 // $userId = $AuthenticatedUser->getId();
                 $bookJson = escape(json_encode(array('slotId' => $slot->getId(), 'teacherId' => $teacher->getId(), 'studentId' => $student->getId(), 'userId' => $timetableUserId, 'eventId' => $activeEvent->getId()))); //'userId' => $userId
                 ?>
-                <?php if ($slot->getType() == 2): ?>
-                <tr class='es-time-table-break'>
-                    <td><?php echo($timeTd) ?></td>
-                    <td colspan='3'>Nicht verfügbar</td>
-                </tr>
+            <?php if ($slot->getType() == 2): ?>
+                <?php if ($AuthenticatedUser->getRole() === 'student'): ?>
+                    <tr class='es-time-table-occupied'>
+                        <td><?php echo($timeTd) ?></td>
+                        <td>Nicht verfügbar</td>
+                        <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                        <td></td>
+                    </tr>
+                <?php else: ?>
+                    <tr class='es-time-table-break'>
+                        <td><?php echo($timeTd) ?></td>
+                        <td colspan='3'>Pause</td>
+                    </tr>
+                <?php endif; ?>
             <?php else: ?>
                 <tr class='<?php echo($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                     <td><?php echo($timeTd) ?></td>
                     <?php if ($AuthenticatedUser->getRole() === 'student'): ?>
-                        <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
+                        <td><?php echo($teacherAvailable ? 'frei' : 'Nicht verfügbar') ?></td>
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
                     <?php else: ?>
                         <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
-                        <td><?php echo($teacherAvailable ? 'frei' : '['.$slotStudent->getClass().'] '. $slotStudent->getFirstName() . ' ' . $slotStudent->getLastName() ) ?></td>
+                        <td><?php echo($teacherAvailable ? 'frei' : $slotStudent->getFirstName() . ' ' . $slotStudent->getLastName() . ' ['.$slotStudent->getClass().']'. ) ?></td>
                     <?php endif; ?>
                     <td>
                         <?php if ($teacherAvailable && $studentAvailable && $canBook): ?>
@@ -343,7 +352,7 @@ class ViewController extends Controller {
                 <tr class='<?php echo($teacherAvailable && $studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
                     <td><?php echo($timeTd) ?></td>
                     <td><?php echo($teacherAvailable ? 'frei' : 'belegt') ?></td>
-                    <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
+                    <td><?php echo($teacherAvailable ? 'frei' : $bookedSlots[$fromDate]['studentName'] . ' ' . $bookedSlots[$fromDate]['studentClass']) ?></td>
                     <td>
                         <?php if ($teacherAvailable): ?>
                             <button type='button' class='btn btn-primary btn-pause'
