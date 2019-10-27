@@ -74,7 +74,7 @@ include_once 'inc/header.php';
                         ?>
                     </p>
 
-                    <?php if ($attendance != null): ?>
+                    <?php if ($attendance != null && isBookingtimeForActiveSpeechday()): ?>
                     <h4>
                         Anwesenheit ändern
                     </h4>
@@ -106,7 +106,17 @@ include_once 'inc/header.php';
                     </form>
 
                     <div class='message-attendance' id='message-attendance'></div>
-
+                    <?php else: ?>
+                        <h2>
+                            Die Anmeldungen laufen bereits!
+                        </h2>
+                        <p>
+                        Um zu vermeiden, dass gebuchte Termine "gelöscht" werden, ist eine Änderung nicht mehr möglich.
+                        </p><p>
+                        Dies kann nur noch durch den Administrator erfolgen.
+                        </p><p>
+                        Als "Workaround" können Sie nicht gebuchte Termine als "Pause" markieren.
+                        </p>
                     <?php endif; ?>
                 </div>
             </div>
