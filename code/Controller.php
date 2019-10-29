@@ -795,6 +795,59 @@ class Controller {
         
     }
     
+	protected function action_downloadCSV() {
+		$activeEvent = EventDAO::getActiveEvent();
+		$teachers = UserDAO::getUsersForRole('teacher');
+		$event = EventDAO::getActiveEvent();
+
+        $eventName = $activeEvent->getName();
+		
+		$data = array(array("Name", "von", "bis", "Raumnummer","Raumname","abwesend"));
+
+		// print_r($teachers);
+		foreach ($teachers as $teacher) {
+			$attendance = SlotDAO::getAttendanceForUser($teacher->getId(), $event);
+			$room = RoomDAO::getRoomForTeacherId($teacher->getId());
+			$name = $teacher->getFirstName() . ' ' . $teacher->getLastName();
+			$isAbsent = UserDAO::isAbsent($teacher->getId());
+
+			if ($room != null) {
+				$raumnummer = $room->getRoomNumber();
+				$raumname = $room->getRoomName();
+			} else {
+				$raumnummer = '';
+				$raumname = '';
+			}
+			
+			if (!$isAbsent) {
+				$von = toDate($attendance['from'], 'H:i');
+				$bis = toDate($attendance['to'], 'H:i');
+			} else {
+				$von = '';
+				$bis = '';
+			}
+			
+			array_push($data, array($name,$von,$bis,$raumnummer,$raumname,$isAbsent));
+		}
+		// print_r($data);
+		$filename = $eventName.'.csv';
+		// open raw memory as file so no temp files needed, you might run out of memory though
+		$f = fopen('php://memory', 'w'); 
+		// loop over the input array
+		foreach ($data as $line) { 
+			// generate csv lines from the inner arrays
+			fputcsv($f, $line, ';'); 
+		}
+		// reset the file pointer to the start of the file
+		fseek($f, 0);
+		// tell the browser it's going to be a csv file
+		header('Content-Type: application/csv');
+		// tell the browser we want to save it instead of displaying it
+		header('Content-Disposition: attachment; filename="'.$filename.'";');
+		// make php send the generated csv lines to the browser
+		fpassthru($f);
+	}
+	
     protected function action_changeConfig() {
         
         $config = new Config('config');

@@ -397,6 +397,11 @@ include_once 'inc/header.php';
             </div>
             <div id='collapse7' class='panel-collapse collapse'>
                 <div class='panel-body'>
+					<form method="post" action="controller.php?action=downloadCSV" class="inline-form" >
+						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Zeit und Räume per csv
+						</button>
+					</form>
                     <button class="btn btn-primary" onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne ausdrucken
                     </button>
