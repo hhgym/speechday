@@ -795,7 +795,7 @@ class Controller {
         
     }
     
-	protected function action_downloadCSV() {
+	protected function action_downloadAttendanceOfTeacher() {
 		$teachers = UserDAO::getUsersForRole('teacher');
 		$event = EventDAO::getActiveEvent();
 

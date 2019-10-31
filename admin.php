@@ -397,7 +397,7 @@ include_once 'inc/header.php';
             </div>
             <div id='collapse7' class='panel-collapse collapse'>
                 <div class='panel-body'>
-					<form method="post" action="controller.php?action=downloadCSV" class="inline-form" >
+					<form method="post" action="controller.php?action=downloadAttendanceOfTeacher" class="inline-form" >
 						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
 							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Zeit und Räume per csv
 						</button>
