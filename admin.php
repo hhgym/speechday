@@ -391,7 +391,7 @@ include_once 'inc/header.php';
             <div class='panel-heading'>
                 <h4 class='panel-title'>
                     <a data-toggle='collapse' data-parent='#accordion' href='#collapse7'>
-                        Zeitpläne ausdrucken
+                        Download der Daten
                     </a>
                 </h4>
             </div>
@@ -402,6 +402,11 @@ include_once 'inc/header.php';
 							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Zeit und Räume per csv
 						</button>
 					</form>
+                    <form method="post" action="controller.php?action=downloadBookedSlots" class="inline-form" >
+						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;gebuchte Termine
+						</button>
+					</form>                                                                                            
                     <button class="btn btn-primary" onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne ausdrucken
                     </button>

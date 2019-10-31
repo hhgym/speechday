@@ -796,11 +796,10 @@ class Controller {
     }
     
 	protected function action_downloadCSV() {
-		$activeEvent = EventDAO::getActiveEvent();
 		$teachers = UserDAO::getUsersForRole('teacher');
 		$event = EventDAO::getActiveEvent();
 
-        $eventName = $activeEvent->getName();
+        $eventName = $event->getName();
 		
 		$data = array(array("Name", "von", "bis", "Raumnummer","Raumname","abwesend"));
 
@@ -830,7 +829,59 @@ class Controller {
 			array_push($data, array($name,$von,$bis,$raumnummer,$raumname,$isAbsent));
 		}
 		// print_r($data);
-		$filename = $eventName.'.csv';
+		$filename = $eventName.'_Anwesenheit.csv';
+		// open raw memory as file so no temp files needed, you might run out of memory though
+		$f = fopen('php://memory', 'w'); 
+		// loop over the input array
+		foreach ($data as $line) { 
+			// generate csv lines from the inner arrays
+			fputcsv($f, $line, ';'); 
+		}
+		// reset the file pointer to the start of the file
+		fseek($f, 0);
+		// tell the browser it's going to be a csv file
+		header('Content-Type: application/csv');
+		// tell the browser we want to save it instead of displaying it
+		header('Content-Disposition: attachment; filename="'.$filename.'";');
+		// make php send the generated csv lines to the browser
+		fpassthru($f);
+	}
+
+    protected function action_downloadBookedSlots() {
+		$activeEvent = EventDAO::getActiveEvent();
+		$teachers = UserDAO::getUsersForRole('teacher');
+		$event = EventDAO::getActiveEvent();
+        
+
+        $eventName = $activeEvent->getName();
+		
+		$data = array(array("Lehrer", "von", "bis", "Schüler", "Klasse", "Raumnummer","Raumname"));
+
+		foreach ($teachers as $teacher) {
+            $slots = SlotDAO::getBookedSlotsForTeacher($event->getId(), $teacher->getId());
+            $room = RoomDAO::getRoomForTeacherId($teacher->getId());
+            $teachername = $teacher->getFirstName() . ' ' . $teacher->getLastName();
+			$isAbsent = UserDAO::isAbsent($teacher->getId());
+			
+			if ($room != null) {
+				$raumnummer = $room->getRoomNumber();
+				$raumname = $room->getRoomName();
+			} else {
+				$raumnummer = '';
+				$raumname = '';
+			}
+
+			foreach ($slots as $slot) {
+                if (!$isAbsent) {
+                    // print_r($slot);
+                    $von = toDate($slot['dateFrom'], 'H:i');
+                    $bis = toDate($slot['dateTo'], 'H:i');
+                    array_push($data, array($teachername,$von,$bis,$slot['studentName'],$slot['studentClass'],$raumnummer,$raumname));
+                }
+            }
+		}
+		// print_r($data);
+		$filename = $eventName.'_Termine.csv';
 		// open raw memory as file so no temp files needed, you might run out of memory though
 		$f = fopen('php://memory', 'w'); 
 		// loop over the input array
