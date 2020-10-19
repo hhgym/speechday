@@ -16,6 +16,13 @@ abstract class AbstractDAO {
 	}
 		return self::$connection;
 	}
+    
+    protected static function check_isInt($variable){
+      if( filter_var($variable, FILTER_VALIDATE_INT) === false ) {
+        return false ;
+      }
+      return true;
+    }
 
     protected static function query($connection, $query, $parameters = array(), $checkSuccess = false) {
 		$statement = $connection->prepare($query);
@@ -23,7 +30,7 @@ abstract class AbstractDAO {
 			$statement->bindValue(
 				is_int($name) ? $name + 1 : $name,
 				$value,
-				PDO::PARAM_INT
+				is_int($value)? PDO::PARAM_INT : PDO::PARAM_STR
 			);
 		}
 		$success = $statement->execute();

@@ -49,7 +49,7 @@ class Controller {
         $beginTime = $_REQUEST['beginTime'];
         $endTime = $_REQUEST['endTime'];
         $slotDuration = $_REQUEST['slotDuration'];
-		$timeBetweenSlots = $_REQUEST['timeBetweenSlots'];
+        $timeBetweenSlots = $_REQUEST['timeBetweenSlots'];
         $breakFrequency = $_REQUEST['breakFrequency'];
         $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
         $bookingDateStart = $_REQUEST['bookingDateStart'];
