@@ -87,17 +87,19 @@ class Event extends Entity {
     private $dateFrom;
     private $dateTo;
     private $slotTime;
+    private $timeBetweenSlots;
     private $breakFrequency;
     private $isActive;
     private $startPostDate;
     private $finalPostDate;
 
-    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $breakFrequency, $isActive, $startPostDate, $finalPostDate) {
+    public function __construct($id, $name, $dateFrom, $dateTo, $slotTime, $timeBetweenSlots, $breakFrequency, $isActive, $startPostDate, $finalPostDate) {
         parent::__construct($id);
         $this->name = $name;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
         $this->slotTime = $slotTime;
+        $this->timeBetweenSlots = $timeBetweenSlots;
         $this->breakFrequency = $breakFrequency;
         $this->isActive = $isActive;
         $this->startPostDate = $startPostDate;
@@ -118,6 +120,10 @@ class Event extends Entity {
 
     public function getSlotTime() {
         return $this->slotTime;
+    }
+
+    public function getTimeBetweenSlots() {
+        return $this->timeBetweenSlots;
     }
 
     public function getBreakFrequency() {

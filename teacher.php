@@ -96,12 +96,12 @@ include_once 'inc/header.php';
                         </div>
 
                         <div class='form-group'>
-                            <label for='inputAbsent'>Abwesend</label>
-                            <input type='checkBox' class='form-control' id='inputAbsent' name='absent' placeholder='abwesend'>
+                            <label for='inputAbsent'>komplett abwesend</label>
+                            <input type='checkBox' id='inputAbsent' name='absent' placeholder='abwesend'>
                         </div>
 
                         <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
-                            Anwesenheit ändern
+                            Änderung bestätigen
                         </button>
                     </form>
 

@@ -49,6 +49,7 @@ class Controller {
         $beginTime = $_REQUEST['beginTime'];
         $endTime = $_REQUEST['endTime'];
         $slotDuration = $_REQUEST['slotDuration'];
+		$timeBetweenSlots = $_REQUEST['timeBetweenSlots'];
         $breakFrequency = $_REQUEST['breakFrequency'];
         $setActive = $_REQUEST['setActive'] == 'true' ? true : false;
         $bookingDateStart = $_REQUEST['bookingDateStart'];
@@ -71,7 +72,7 @@ class Controller {
             $finalPostDate = strtotime($date . ' 0:00');
         }
 
-        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $breakFrequency, $setActive, $startPostDate, $finalPostDate);
+        $eventId = EventDAO::createEvent($name, $unixTimeFrom, $unixTimeTo, $slotDuration, $timeBetweenSlots, $breakFrequency, $setActive, $startPostDate, $finalPostDate);
         if ($eventId > 0) {
             echo 'success';
         }
@@ -873,7 +874,6 @@ class Controller {
 
 			foreach ($slots as $slot) {
                 if (!$isAbsent) {
-                    // print_r($slot);
                     $von = toDate($slot['dateFrom'], 'H:i');
                     $bis = toDate($slot['dateTo'], 'H:i');
                     array_push($data, array($teachername,$von,$bis,$slot['studentName'],$slot['studentClass'],$raumnummer,$raumname));
@@ -899,6 +899,114 @@ class Controller {
 		fpassthru($f);
 	}
 	
+	    protected function action_downloadOverviewRooms() {
+
+		$event = EventDAO::getActiveEvent();
+        $eventName = $event->getName();
+		
+		$data = array(array('Raumnummer','Raumname','Lehrer'));
+		
+		$rooms = RoomDAO::getAllRooms();
+
+		foreach ($rooms as $room) {
+			
+			$raumnummer = $room->getRoomNumber();
+			$raumname = $room->getRoomName();
+			
+			$teacher = UserDAO::getUserForId($room->getTeacherId());
+			if ($teacher != null) {
+				$teachername = $teacher->getFirstName() . ' ' . $teacher->getLastName();
+			} else {
+				$teachername = '';
+			}
+			
+			array_push($data, array($raumnummer,$raumname,$teachername));
+		}
+		// print_r($data);
+		$filename = $eventName.'_Raeume.csv';
+		// open raw memory as file so no temp files needed, you might run out of memory though
+		$f = fopen('php://memory', 'w'); 
+		// loop over the input array
+		foreach ($data as $line) { 
+			// generate csv lines from the inner arrays
+			fputcsv($f, $line, ';'); 
+		}
+		// reset the file pointer to the start of the file
+		fseek($f, 0);
+		// tell the browser it's going to be a csv file
+		header('Content-Type: application/csv');
+		// tell the browser we want to save it instead of displaying it
+		header('Content-Disposition: attachment; filename="'.$filename.'";');
+		// make php send the generated csv lines to the browser
+		fpassthru($f);
+	}
+	
+    protected function action_downloadBookedSlotsForEachTeacher() {
+        $activeEvent = EventDAO::getActiveEvent();
+		$teachers = UserDAO::getUsersForRole('teacher');
+		$event = EventDAO::getActiveEvent();
+        
+        $eventName = $activeEvent->getName();
+        
+        // create your zip file
+        $zipname = $eventName.'.zip';
+        $zip = new ZipArchive;
+        $zip->open($zipname, ZipArchive::CREATE);
+        
+        // loop over teachers
+        foreach ($teachers as $teacher) {
+            $slots = SlotDAO::getBookedSlotsForTeacher($event->getId(), $teacher->getId());
+            $room = RoomDAO::getRoomForTeacherId($teacher->getId());
+            // $teachername = $teacher->getFirstName() . ' ' . $teacher->getLastName();
+			$isAbsent = UserDAO::isAbsent($teacher->getId());
+            
+            if (!$isAbsent and !empty($slots)) {
+            
+                if ($room != null) {
+                    $raumnummer = $room->getRoomNumber();
+                    $raumname = $room->getRoomName();
+                } else {
+                    $raumnummer = '';
+                    $raumname = '';
+                }
+                
+                $data = array(array("von", "bis", "Schüler", "Klasse", "Raumnummer","Raumname"));
+
+                foreach ($slots as $slot) {
+                    
+                        $von = toDate($slot['dateFrom'], 'H:i');
+                        $bis = toDate($slot['dateTo'], 'H:i');
+                        array_push($data, array($von,$bis,$slot['studentName'],$slot['studentClass'],$raumnummer,$raumname));
+                }
+                // open raw memory as file so no temp files needed, you might run out of memory though
+                $f = fopen('php://memory', 'w');
+                // write the data to csv
+                foreach ($data as $line) { 
+                    // generate csv lines from the inner arrays
+                    fputcsv($f, $line, ';'); 
+                }
+                // return to the start of the stream
+                rewind($f);
+                $teacherfile = $teacher->getUserName();
+                // add the in-memory file to the archive, giving a name
+                $zip->addFromString($teacherfile.'.csv', stream_get_contents($f) );
+                //close the file
+                fclose($f);
+            }
+		}
+		// close the archive
+        $zip->close();
+        
+        header('Content-Type: application/zip');
+        header('Content-disposition: attachment; filename='.$zipname);
+        header('Content-Length: ' . filesize($zipname));
+        readfile($zipname);
+
+        // remove the zip archive
+        // you could also use the temp file method above for this.
+        unlink($zipname);
+    }
+    
     protected function action_changeConfig() {
         
         $config = new Config('config');

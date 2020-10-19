@@ -46,9 +46,13 @@ function getDateOptions($attendance, $dateFrom = true) {
     $activeEvent = EventDAO::getActiveEvent();
 
     $time = $activeEvent->getDateFrom();
+    $startTime = $time;
     $endTime = $activeEvent->getDateTo();
     $slottime = $activeEvent->getSlotTime();
-    $slottime = $slottime * 60;
+    $timeBetweenSlots = $activeEvent->getTimeBetweenSlots();
+    
+    $slottime = ($slottime * 60);
+	$timeBetweenSlots = ($timeBetweenSlots * 60);
     
     $options = '';
 
@@ -57,12 +61,22 @@ function getDateOptions($attendance, $dateFrom = true) {
         $selected = '';
         if ($dateFrom && $time == $attendance['from']) {
             $selected = ' selected';
-        } else if (!$dateFrom && $time == $attendance['to']) {
+        } else if (!$dateFrom && ($time - $timeBetweenSlots) == $attendance['to']) {
             $selected = ' selected';
         }
+        
+        if (!$dateFrom && $time != $startTime) {
+            $time -= $timeBetweenSlots;
+        }
+        
         $options .= sprintf('<option value="%s"%s>%s</option>', $time, $selected, date('H:i', $time));
         // $time += $halfHour;
-        $time += $slottime;
+        
+        if (!$dateFrom && $time != $startTime) {
+            $time += $timeBetweenSlots;
+        }
+
+        $time += $slottime + $timeBetweenSlots;
     }
 
     return $options;

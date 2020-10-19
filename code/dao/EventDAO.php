@@ -12,14 +12,14 @@ class EventDAO extends AbstractDAO {
         $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, breakFrequency, isActive, startPostDate, finalPostDate FROM event ORDER BY dateFrom;', array());
 
         while ($e = self::fetchObject($res)) {
-            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
+            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->timeBetweenSlots, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
         }
         self::close($res);
 
         return $events;
     }
 
-    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $setActive, $startPostDate, $finalPostDate) {
+    public static function createEvent($name, $dateFrom, $dateTo, $slotDuration, $timeBetweenSlots, $breakFrequency, $setActive, $startPostDate, $finalPostDate) {
         $con = self::getConnection();
 
         if (($dateTo - $dateFrom < 0) || (count(EventDAO::getEventsForDate($dateFrom)) > 0)) {
@@ -35,7 +35,7 @@ class EventDAO extends AbstractDAO {
         }
 
         self::getConnection()->beginTransaction();
-        self::query($con, 'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, breakFrequency, startPostDate, finalPostDate) VALUES (?, ?, ?, ?, ?, ?, ?);', array($name, $dateFrom, $dateTo, $slotDuration, $breakFrequency, $startPostDate, $finalPostDate));
+        self::query($con, 'INSERT INTO event (name, dateFrom, dateTo, slotTimeMin, timeBetweenSlots, breakFrequency, startPostDate, finalPostDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', array($name, $dateFrom, $dateTo, $slotDuration, $timeBetweenSlots, $breakFrequency, $startPostDate, $finalPostDate));
         $eventId = self::lastInsertId($con);
 
         $teachers = UserDAO::getUsersForRole('teacher');
@@ -58,10 +58,10 @@ class EventDAO extends AbstractDAO {
     public static function getEventForId($eventId) {
         $event = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE id = ?;', array($eventId));
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, timeBetweenSlots, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE id = ?;', array($eventId));
 
         if ($e = self::fetchObject($res)) {
-            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
+            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->timeBetweenSlots, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
         }
         self::close($res);
         return $event;
@@ -70,10 +70,10 @@ class EventDAO extends AbstractDAO {
     public static function getActiveEvent() {
         $event = null;
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE isActive = 1;', array());
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, timeBetweenSlots, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE isActive = 1;', array());
 
         if ($e = self::fetchObject($res)) {
-            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
+            $event = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->timeBetweenSlots, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
         }
         self::close($res);
         return $event;
@@ -85,10 +85,10 @@ class EventDAO extends AbstractDAO {
 
         $events = array();
         $con = self::getConnection();
-        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE dateFrom BETWEEN ? AND ?;', array($from, $to));
+        $res = self::query($con, 'SELECT id, name, dateFrom, dateTo, slotTimeMin, timeBetweenSlots, breakFrequency, isActive, startPostDate, finalPostDate FROM event WHERE dateFrom BETWEEN ? AND ?;', array($from, $to));
 
         while ($e = self::fetchObject($res)) {
-            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
+            $events[] = new Event($e->id, $e->name, $e->dateFrom, $e->dateTo, $e->slotTimeMin, $e->timeBetweenSlots, $e->breakFrequency, $e->isActive, $e->startPostDate, $e->finalPostDate);
         }
         self::close($res);
 

@@ -72,6 +72,7 @@ class SlotDAO extends AbstractDAO {
         $slots = array();
         $slotDuration = $event->getSlotTime();
         $startTime = $event->getDateFrom();
+		$timeBetweenSlots = $event->getTimeBetweenSlots();
         $breakFrequency = $event->getBreakFrequency();
         $breakCounter = 0;
         while ($startTime < $event->getDateTo()) {
@@ -86,7 +87,7 @@ class SlotDAO extends AbstractDAO {
             } else {
                 $slots[] = array('start' => $startTime, 'end' => $endTime, 'type' => $type);
             }
-            $startTime = $endTime;
+            $startTime = $endTime + ($timeBetweenSlots * 60);
             $breakCounter += $slotDuration;
         }
         return $slots;

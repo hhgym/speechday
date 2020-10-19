@@ -152,6 +152,11 @@ class ViewController extends Controller {
             return;
         }
         
+		usort($slots,function($a,$b){
+			$c = $a->getDateFrom() - $b->getDateFrom();
+			return $c;
+		});
+		
         if ($AuthenticatedUser->getRole() === 'student') {
         ?>
             <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
@@ -278,8 +283,9 @@ class ViewController extends Controller {
             </div>
             
             <button type='submit' class='btn btn-primary' id='btn-change-room'>
-                Raum ändern
+                Änderung bestätigen
             </button>
+			Im Moment kann jeder Raum nur einzeln belegt werden. Bei Problemfällen bitte bei Herrn Pietschmann melden. 
         </form>
         <?php
         
@@ -313,6 +319,10 @@ class ViewController extends Controller {
             echo($noSlotsFoundWarning);
             return;
         }
+		usort($slots,function($a,$b){
+			$c = $a->getDateFrom() - $b->getDateFrom();
+			return $c;
+		});
 
         ?>
         <h3>Termine für <?php echo(escape($teacher->getTitle().' ' .$teacher->getFirstName() . ' ' . $teacher->getLastName())) ?></h3>
@@ -395,8 +405,9 @@ class ViewController extends Controller {
             echo($noSlotsFoundWarning);
             return;
         }
+		
         $slots = SlotDAO::calculateSlots($activeEvent, true);
-        $rooms = RoomDAO::getAllRooms();
+        $rooms = RoomDAO::getAllUsedRooms();
         ?>
         <div id="printHeader">
             <h3>Meine Termine für den <?php echo(toDate($activeEvent->getDateFrom(), 'd.m.Y')) ?></h3>
@@ -411,48 +422,36 @@ class ViewController extends Controller {
             </tr>
             </thead>
             <tbody>
-            
-            <?php foreach ($slots as $slot):
-                $fromDate = $slot->getDateFrom();
-                $studentAvailable = array_key_exists($fromDate, $bookedSlots) ? false : true;
-                $timeTd = escape(toDate($slot->getDateFrom(), 'H:i')) . optionalBreak() . escape(toDate($slot->getDateTo(), 'H:i'));
-                $roomTd = "";
-                if (!$studentAvailable && array_key_exists($bookedSlots[$fromDate]['teacherId'], $rooms)) {
-                    $room = $rooms[$bookedSlots[$fromDate]['teacherId']];
+           
+			<?php foreach ($bookedSlots as $slot):
+				$timeTd = escape(toDate($slot['dateFrom'], 'H:i')) . optionalBreak() . escape(toDate($slot['dateTo'], 'H:i'));
+				$roomTd = "";
+				$room = RoomDAO::getRoomForTeacherId($slot['teacherId']);
+                if ($room != null) {
                     $roomTd = escape($room->getRoomNumber()) . optionalBreak() . escape($room->getRoomName());
                 }
-                ?>
-                <?php if ($isFullView || !$studentAvailable): ?>
-                    <?php if ($slot->getType() == 2): ?>
-                        <tr class='es-time-table-break'>
-                            <td><?php echo($timeTd) ?></td>
-                            <td></td>
-                            <td>PAUSE</td>
-                            <td class='no-print'></td>
-                        </tr>
-                    <?php else: ?>
-                        <tr class='<?php echo($studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
-                            <td><?php echo($timeTd) ?></td>
-                            <td><?php echo($roomTd) ?></td>
-                            <td><?php echo($studentAvailable ? 'frei' : $bookedSlots[$fromDate]['teacherName']) ?></td>
-                            <td class='no-print'>
-                                <?php if (!$studentAvailable):
-                                    $deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $bookedSlots[$fromDate]['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
-                                    ?>
-                                    <?php if ($bookedSlots[$fromDate]['bookedByTeacher'] == '1'): ?>
-                                        durch <?php echo($bookedSlots[$fromDate]['teacherLastName']) ?> gesetzt
-                                    <?php else: ?>   
-                                        <button type='button' class='btn btn-primary btn-delete'
-                                            id='btn-delete-<?php echo($bookedSlots[$fromDate]['id']) ?>'
-                                            value='<?php echo($deleteJson) ?>'>Termin löschen
-                                        </button>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                <?php endif; ?>
-            <?php endforeach; ?>
+				?>
+				<tr class='<?php echo($studentAvailable ? 'es-time-table-available' : 'es-time-table-occupied') ?>'>
+					<td><?php echo($timeTd) ?></td>
+					<td><?php echo($roomTd) ?></td>
+					<td><?php echo($slot['teacherName']) ?></td>
+					<td class='no-print'>
+						<?php if (!$studentAvailable):
+							$deleteJson = escape(json_encode(array('userId' => $user->getId(), 'slotId' => $slot['id'], 'eventId' => $activeEvent->getId(), 'typeId' => $typeId)));
+							?>
+							<?php if ($slot['bookedByTeacher'] == '1'): ?>
+								durch <?php echo($slot['teacherLastName']) ?> gesetzt
+							<?php else: ?>   
+								<button type='button' class='btn btn-primary btn-delete'
+									id='btn-delete-<?php echo($slot['id']) ?>'
+									value='<?php echo($deleteJson) ?>'>Termin löschen
+								</button>
+							<?php endif; ?>
+						<?php endif; ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>		
+            
             </tbody>
         </table>
         <?php
@@ -569,7 +568,7 @@ class ViewController extends Controller {
 
     public function action_changeUser() {
         $users = UserDAO::getUsers();
-        $rooms = RoomDAO::getAllRooms();
+        $rooms = RoomDAO::getAllUsedRooms();
         ?>
 
         <div class='form-group'>
@@ -951,6 +950,11 @@ class ViewController extends Controller {
                     <?php echo(getDateOptions($attendance, false)); ?>
                 </select>
             </div>
+
+			<div class='form-group'>
+				<label for='inputAbsent'>komplett abwesend</label>
+				<input type='checkBox' id='inputAbsent' name='absent' placeholder='abwesend'>
+			</div>
 
             <button type='submit' class='btn btn-primary' id='btn-change-attendance'>
                 Anwesenheit für <?php echo escape($user->getFirstName() . ' ' . $user->getLastName()); ?> ändern

@@ -132,6 +132,14 @@ include_once 'inc/header.php';
                             </select>
                         </div>
                         
+						<div class='form-group'>
+                            <label for='inputTimeBetweenSlots'>Zeit zwischen Slots</label>
+                            <select class='form-control' id='inputTimeBetweenSlots' name='timeBetweenSlots'>
+                                <option>0</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+						
                         <div class='form-group'>
                             <label for='inputbreakFrequency'>Zeit zwischen Pausen (keine Pause = 0)</label>
                             <select class='form-control' id='inputbreakFrequency' name='breakFrequency'>
@@ -399,14 +407,24 @@ include_once 'inc/header.php';
                 <div class='panel-body'>
 					<form method="post" action="controller.php?action=downloadAttendanceOfTeacher" class="inline-form" >
 						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
-							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Zeit und Räume per csv
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Anwesenheit und Räume für jeden Lehrer (csv)
 						</button>
 					</form>
                     <form method="post" action="controller.php?action=downloadBookedSlots" class="inline-form" >
 						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
-							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;gebuchte Termine
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;alle gebuchte Termine (csv)
 						</button>
-					</form>                                                                                            
+					</form>
+					<form method="post" action="controller.php?action=downloadOverviewRooms" class="inline-form" >
+						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;Raumübersicht (csv)
+						</button>
+					</form>
+                    <form method="post" action="controller.php?action=downloadBookedSlotsForEachTeacher" class="inline-form" >
+						<button type='submit' class='btn btn-primary btn-ics-download' id='btn-ics-download' >
+							<span class='glyphicon glyphicon glyphicon-th-list'></span>&nbsp;&nbsp;gebuchte Termine für jeden Lehrer (zip)
+						</button>
+					</form>
                     <button class="btn btn-primary" onclick="PrintElem('#adminTimeTable', '<?php echo escape(getActiveSpeechdayText()); ?>')">
                         <span class='glyphicon glyphicon-print'></span>&nbsp;&nbsp;Zeitpläne ausdrucken
                     </button>
