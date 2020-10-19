@@ -45,6 +45,7 @@ CREATE TABLE `event` (
   `dateFrom` int(11) NOT NULL,
   `dateTo` int(11) NOT NULL,
   `slotTimeMin` int(11) NOT NULL DEFAULT '5',
+  `timeBetweenSlots` int(11) NOT NULL DEFAULT '0',
   `breakFrequency` int(11) NOT NULL DEFAULT '0',
   `isActive` int(11) NOT NULL DEFAULT '0',
   `startPostDate` int(11) DEFAULT NULL,
